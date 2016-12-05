@@ -1,2 +1,2 @@
 # RedditData
-Database Course task for creating a database for Riddet by using JDBC and SQLite 
+Database Course task for creating a database for Reddit by using JDBC and SQLite 
