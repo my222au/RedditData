@@ -1,44 +1,72 @@
 package main;
+
+import jdk.nashorn.internal.parser.JSONParser;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.*;
 import java.sql.*;
 
-/**
- * .
- * TODO 1  Import and parse  the  json file
- * TODO 2  set up att database and then covert the json file to
- * TODO 3 Create a E/R MODEL ff
- }
-  */
-
-
-
-
-
 public class Main {
+
+
     public static void main(String[] args) {
+        // craete new database  class
+            DatabaseHelper db = new DatabaseHelper();
+        // connect to the datebase
+            db.connectToDatabase();
+        // create tabels
+            db.createTables();
+        // read the file;
 
-        Connection c = null;
-        try {
-            c = DriverManager.getConnection("jdbc:sqlite:Reddit.db");
-            Statement s = c.createStatement();
-            s.execute("CREATE TABLE Sub(subreddit_id TEXT, subreddit TEXT)");
-            // create the other tables
-            s.execute("CREATE TABLE Name(Id TEXT, name TEXT)");
-            s.execute("CREATE TABLE Comment(id TEXT, parent_id TEXT, link_id TEXT, author TEXT, body TEXT, subreddit_id TEXT, score INTEGER, created_utc TEXT)");
-
-        }
-        catch(SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        finally {
+            String data = readFile();
             try {
-                if(c != null)
-                    c.close();
+                JSONObject jsonObject = new JSONObject(data);
+                db.insert(jsonObject.getString("id"), jsonObject.getString("name"));
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            catch(SQLException e) {
-                System.err.println(e);
-            }
-        }
-
+        db.readFromDataBase();
+        db.close();
 
     }
+
+
+    /****
+     * Reads the  josn file  and saves the data to string
+     *
+     * @return string data.
+     */
+    private static String readFile() {
+        String data = ""; // save th
+        BufferedReader bufferedReader = null;
+
+        try {
+            String line = "";
+            bufferedReader = new BufferedReader(new FileReader("data.json"));
+            while ((line = bufferedReader.readLine()) != null) {
+                data += line;
+
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+        }
+
+        return data;
+    }
+
+
 }
