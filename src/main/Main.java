@@ -1,6 +1,4 @@
 package main;
-
-
 import java.sql.*;
 
 /**
@@ -20,14 +18,11 @@ public class Main {
 
         Connection c = null;
         try {
-            c = DriverManager.getConnection("jdbc:sqlite:2dv513.db");
+            c = DriverManager.getConnection("jdbc:sqlite:Riddet.db");
             Statement s = c.createStatement();
-            s.setQueryTimeout(30);  // set timeout to 30 sec.
-            ResultSet rs = s.executeQuery("select * from subs limit 10");
-            while(rs.next()) {
-                System.out.println("name = " + rs.getString("name"));
-                System.out.println("id = " + rs.getInt("id"));
-            }
+            s.execute("CREATE TABEL SUB(subreddit_id TEXT, subreddit TEXT");
+            // create the other tables
+
         }
         catch(SQLException e) {
             System.err.println(e.getMessage());
@@ -44,6 +39,8 @@ public class Main {
 
 
     }
+ // create a tabe l
+
 
 
 
