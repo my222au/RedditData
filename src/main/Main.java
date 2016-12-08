@@ -22,6 +22,8 @@ public class Main {
             Statement s = c.createStatement();
             s.execute("CREATE TABEL SUB(subreddit_id TEXT, subreddit TEXT");
             // create the other tables
+            s.execute("CREATE TABEL Name(Id TEXT, name TEXT");
+            s.execute("CREATE TABEL Comment(Id TEXT, link_id TEXT, ");
 
         }
         catch(SQLException e) {
