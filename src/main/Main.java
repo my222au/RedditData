@@ -20,10 +20,10 @@ public class Main {
         try {
             c = DriverManager.getConnection("jdbc:sqlite:Riddet.db");
             Statement s = c.createStatement();
-            s.execute("CREATE TABEL SUB(subreddit_id TEXT, subreddit TEXT");
+            s.execute("CREATE TABLE SUB(subreddit_id TEXT, subreddit TEXT");
             // create the other tables
-            s.execute("CREATE TABEL Name(Id TEXT, name TEXT");
-            s.execute("CREATE TABEL Comment(Id TEXT, link_id TEXT, ");
+            s.execute("CREATE TABLE Name(Id TEXT, name TEXT");
+            s.execute("CREATE TABLE Comment(id TEXT, parent_id TEXT, link_id TEXT, author TEXT, body TEXT, subreddit_id TEXT, score INTEGER, created_utc TEXT");
 
         }
         catch(SQLException e) {
