@@ -14,17 +14,16 @@ public class DatabaseHelper  {
 
     public Statement connectToDatabase(){
        file = new File("Reddit.db");
-        if(!file.exists()){
+
             try {
                 connection  = DriverManager.getConnection("jdbc:sqlite:Reddit.db");
                 statement  = connection.createStatement();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        } else {
-            // db esixts  do nothing
 
-        }
+
+
 
         return  statement;
     }
@@ -34,14 +33,14 @@ public class DatabaseHelper  {
 
         try {
 
-            if (statement != null) {
+
                 statement.execute("CREATE TABLE  IF NOT EXISTS Sub (subreddit_id TEXT, subreddit TEXT)");
                 statement.execute("CREATE TABLE IF NOT EXISTS Name (id TEXT, name TEXT)");
                 statement.execute("CREATE TABLE IF NOT EXISTS Comment (id TEXT, parent_id TEXT, link_id TEXT, author TEXT, body TEXT, subreddit_id TEXT, score INTEGER, created_utc TEXT)");
 
-            }
+
             }catch(SQLException e){
-                System.out.println("Failed while creating the tabels ");
+                System.out.println("Failed while creating the tabel ");
                 e.printStackTrace();
 
             }
@@ -50,12 +49,14 @@ public class DatabaseHelper  {
 
 
 
-    public void insert(String id, String name) {
+    public void insert(String id, String name, String subreddit_id, String subreddit) {
         // testing to inserting Id
         try {
-            if(statement!=null) {
+
                 statement.execute("INSERT INTO Name VALUES (" + "\'" + id + "\'," + "\'" + name + "\'" + " )");
-            }
+                statement.execute("INSERT INTO Name VALUES (" + "\'" + subreddit_id + "\'," + "\'" + subreddit + "\'" + " )");
+
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -69,14 +70,20 @@ public class DatabaseHelper  {
         ResultSet rs = null;
         try {
             if(statement!=null) {
-                rs = statement.executeQuery("select * from name");
+                rs = statement.executeQuery("SELECT * FROM name");
 
                 while (rs.next()) {
                     // read the result set
-                    System.out.println(rs.getString("id"));
+
+                    System.out.println("id:" + rs.getString("id") + " name:" + rs.getString("name"));
 
                 }
             }
+                rs = statement.executeQuery("SELECT * FROM Sub");
+                while (rs.next()){
+                    System.out.println( rs.getString("subreddit_id") + " " + rs.getString("subreddit"));
+                }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

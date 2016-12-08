@@ -13,21 +13,25 @@ public class Main {
     public static void main(String[] args) {
         // craete new database  class
             DatabaseHelper db = new DatabaseHelper();
-        // connect to the datebase
             db.connectToDatabase();
-        // create tabels
-            db.createTables();
+           db.createTables();
         // read the file;
 
-            String data = readFile();
-            try {
-                JSONObject jsonObject = new JSONObject(data);
-                db.insert(jsonObject.getString("id"), jsonObject.getString("name"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+//            String data = readFile();
+//            try {
+//                JSONObject jsonObject = new JSONObject(data);
+//                db.insert(jsonObject.getString("id"),
+//                        jsonObject.getString("name"),
+//                        jsonObject.getString("subreddit_id"),
+//                        jsonObject.getString("subreddit"));
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
         db.readFromDataBase();
         db.close();
+
+//        readFile();
 
     }
 
@@ -40,15 +44,32 @@ public class Main {
     private static String readFile() {
         String data = ""; // save th
         BufferedReader bufferedReader = null;
-
+        //  "/Users/macbookpro/Desktop/RC_2007_10.json"
+        DatabaseHelper db = new DatabaseHelper();
+        db.connectToDatabase();
+        db.createTables();
         try {
             String line = "";
-            bufferedReader = new BufferedReader(new FileReader("data.json"));
+            bufferedReader = new BufferedReader(new FileReader("/Users/macbookpro/Desktop/RC_2007_10.json"));
             while ((line = bufferedReader.readLine()) != null) {
                 data += line;
 
-            }
 
+
+                try {
+                    JSONObject jsonObject = new JSONObject(data);
+                    System.out.println(jsonObject.toString());
+                    db.insert(jsonObject.getString("id"),
+                            jsonObject.getString("name"),
+                            jsonObject.getString("subreddit_id"),
+                            jsonObject.getString("subreddit"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            db.readFromDataBase();
+            db.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
