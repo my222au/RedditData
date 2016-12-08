@@ -18,7 +18,7 @@ public class Main {
 
         Connection c = null;
         try {
-            c = DriverManager.getConnection("jdbc:sqlite:Riddet.db");
+            c = DriverManager.getConnection("jdbc:sqlite:Reddit.db");
             Statement s = c.createStatement();
             s.execute("CREATE TABLE Sub(subreddit_id TEXT, subreddit TEXT)");
             // create the other tables
@@ -41,9 +41,4 @@ public class Main {
 
 
     }
- // create a tabe l
-
-
-
-
 }
