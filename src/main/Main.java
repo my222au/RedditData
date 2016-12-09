@@ -16,7 +16,7 @@ public class Main {
             db.connectToDatabase();
            db.createTables();
         // read the file;
-
+//
 //            String data = readFile();
 //            try {
 //                JSONObject jsonObject = new JSONObject(data);
@@ -31,7 +31,7 @@ public class Main {
         db.readFromDataBase();
         db.close();
 
-//        readFile();
+       // readFile();
 
     }
 
@@ -42,7 +42,7 @@ public class Main {
      * @return string data.
      */
     private static String readFile() {
-        String data = ""; // save th
+
         BufferedReader bufferedReader = null;
         //  "/Users/macbookpro/Desktop/RC_2007_10.json"
         DatabaseHelper db = new DatabaseHelper();
@@ -50,15 +50,12 @@ public class Main {
         db.createTables();
         try {
             String line = "";
-            bufferedReader = new BufferedReader(new FileReader("/Users/macbookpro/Desktop/RC_2007_10.json"));
+            bufferedReader = new BufferedReader(new FileReader("/Users/db/RC_2007-10"));
             while ((line = bufferedReader.readLine()) != null) {
-                data += line;
-
-
+                System.out.println(line);   // prints the data
 
                 try {
-                    JSONObject jsonObject = new JSONObject(data);
-                    System.out.println(jsonObject.toString());
+                    JSONObject jsonObject = new JSONObject(line);
                     db.insert(jsonObject.getString("id"),
                             jsonObject.getString("name"),
                             jsonObject.getString("subreddit_id"),
