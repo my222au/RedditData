@@ -41,7 +41,7 @@ public class Main {
      *
      * @return string data.
      */
-    private static String readFile() {
+    private static void readFile() {
 
         BufferedReader bufferedReader = null;
         //  "/Users/macbookpro/Desktop/RC_2007_10.json"
@@ -79,11 +79,7 @@ public class Main {
                     e.printStackTrace();
                 }
             }
-
-
         }
-
-        return data;
     }
 
 
