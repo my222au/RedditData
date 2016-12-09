@@ -13,7 +13,7 @@ public class DatabaseHelper  {
 
 
     public Statement connectToDatabase(){
-       file = new File("Reddit.db");
+
 
             try {
                 connection  = DriverManager.getConnection("jdbc:sqlite:Reddit.db");
@@ -49,12 +49,20 @@ public class DatabaseHelper  {
 
 
 
-    public void insert(String id, String name, String subreddit_id, String subreddit) {
+    public void insert(String id,String parent_id, String link_id,
+                       String name, String author, String body,
+                       String subreddit_id, String subreddit, int score, String created_utc ) {
         // testing to inserting Id
         try {
 
                 statement.execute("INSERT INTO Name VALUES (" + "\'" + id + "\'," + "\'" + name + "\'" + " )");
                 statement.execute("INSERT INTO Name VALUES (" + "\'" + subreddit_id + "\'," + "\'" + subreddit + "\'" + " )");
+              statement.execute("INSERT INTO Comment  VALUES  ("+ "\'" + id + "\'," +
+                      "\'" + parent_id+ "\',"+ "\'" + link_id + "\',"
+                      + "\'" + author+ "\'," +"\'"
+                      + subreddit_id +"\',"
+                      + score +
+                      ",\'" + subreddit_id +"\'," + "\'" + created_utc +"\'" + ")");
 
 
         } catch (SQLException e) {
@@ -69,20 +77,17 @@ public class DatabaseHelper  {
 
         ResultSet rs = null;
         try {
-            if(statement!=null) {
-                rs = statement.executeQuery("SELECT * FROM name");
+
+                rs = statement.executeQuery("SELECT * FROM  comment ");
 
                 while (rs.next()) {
                     // read the result set
 
-                    System.out.println("id:" + rs.getString("id") + " name:" + rs.getString("name"));
+                    System.out.println(rs.getString("created_utc"));
 
                 }
-            }
-                rs = statement.executeQuery("SELECT * FROM Sub");
-                while (rs.next()){
-                    System.out.println( rs.getString("subreddit_id") + " " + rs.getString("subreddit"));
-                }
+
+
 
         } catch (SQLException e) {
             e.printStackTrace();
