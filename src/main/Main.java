@@ -11,28 +11,26 @@ public class Main {
 
 
     public static void main(String[] args) {
-        // craete new database  class
-            DatabaseHelper db = new DatabaseHelper();
-            db.connectToDatabase();
-           db.createTables();
-        // read the file;
-//
-//            String data = readFile();
-//            try {
-//                JSONObject jsonObject = new JSONObject(data);
-//                db.insert(jsonObject.getString("id"),
-//                        jsonObject.getString("name"),
-//                        jsonObject.getString("subreddit_id"),
-//                        jsonObject.getString("subreddit"));
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//
+
+        readFromDataBase();
+ //     saveToDataBase();
+
+    }
+
+    private static void saveToDataBase() {
+        DatabaseHelper db = new DatabaseHelper();
+        db.connectToDatabase();
+        db.createTables();
+
+        readFile();
+    }
+
+    private static void readFromDataBase() {
+        DatabaseHelper db = new DatabaseHelper();
+        db.connectToDatabase();
         db.readFromDataBase();
+
         db.close();
-
-       // readFile();
-
     }
 
 
