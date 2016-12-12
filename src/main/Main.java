@@ -1,6 +1,8 @@
 package main;
 
 import jdk.nashorn.internal.parser.JSONParser;
+import jdk.nashorn.internal.parser.Parser;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -8,12 +10,14 @@ import java.io.*;
 import java.sql.*;
 
 public class Main {
+    private static long start;
+    private static long end;
 
 
     public static void main(String[] args) {
 //
-//        saveToDataBase();
-        readFromDataBase();
+        saveToDataBase();
+//        readFromDataBase();
 
 
     }
@@ -25,7 +29,7 @@ public class Main {
     private static void readFromDataBase() {
         DatabaseHelper db = new DatabaseHelper();
         db.connectToDatabase();
-        db.readFromDataBase("SELECT * FROM Comment","author");
+        db.readFromDataBase("SELECT * FROM Comment", "author");
 
         db.close();
     }
@@ -43,12 +47,12 @@ public class Main {
         DatabaseHelper db = new DatabaseHelper();
         db.connectToDatabase();
         db.createTables();
+        StringBuilder sb = new StringBuilder();
         try {
             String line = "";
             bufferedReader = new BufferedReader(new FileReader("/Users/db/RC_2007_10"));
+            start = System.currentTimeMillis();
             while ((line = bufferedReader.readLine()) != null) {
-                System.out.println(line);   // prints the data
-
                 try {
                     JSONObject jsonObject = new JSONObject(line);
                     db.insert(jsonObject.getString("id"),
@@ -64,8 +68,11 @@ public class Main {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
+                db.excuteBatch();
             }
+
+            end = (System.currentTimeMillis() - start);
+            System.out.println(end);
             db.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -81,6 +88,5 @@ public class Main {
             }
         }
     }
-
 
 }
