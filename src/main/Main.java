@@ -14,6 +14,7 @@ public class Main {
     private static long end;
 
 
+
     public static void main(String[] args) {
 //
         saveToDataBase();
@@ -47,12 +48,14 @@ public class Main {
         DatabaseHelper db = new DatabaseHelper();
         db.connectToDatabase();
         db.createTables();
+        int lineCount =0;
         StringBuilder sb = new StringBuilder();
         try {
             String line = "";
             bufferedReader = new BufferedReader(new FileReader("/Users/db/RC_2007_10"));
             start = System.currentTimeMillis();
             while ((line = bufferedReader.readLine()) != null) {
+                lineCount++;
                 try {
                     JSONObject jsonObject = new JSONObject(line);
                     db.insert(jsonObject.getString("id"),
@@ -68,7 +71,7 @@ public class Main {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                db.excuteBatch();
+                db.excuteBatch(10000,lineCount);
             }
 
             end = (System.currentTimeMillis() - start);

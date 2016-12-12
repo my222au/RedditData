@@ -9,6 +9,7 @@ import java.sql.*;
 public class DatabaseHelper  {
     private Connection  connection;
     private  Statement  statement;
+    PreparedStatement preparedStatement;
     File file;
 
 
@@ -54,7 +55,7 @@ public class DatabaseHelper  {
                        String subreddit_id, String subreddit, int score, String created_utc ) {
 
 
-            String sqlStatment1 = "INSERT INTO Name (id, name)VALUES (?,?)";
+            String sqlinser = "INSERT INTO Name (id, name) VALUES (?,?)";
             String sqlStatement2 = "INSERT INTO Sub VALUES (" + "\'" + subreddit_id + "\'," + "\'" + subreddit + "\'" + " )";
             String sqlStatement3 ="INSERT INTO Comment  VALUES  ("+ "\'" + id + "\'," +"\'" + parent_id+ "\',"+ "\'" + link_id + "\',"
                       + "\'" + author+ "\'," +"\'"
@@ -63,25 +64,33 @@ public class DatabaseHelper  {
                       ",\'" + subreddit_id +"\'," + "\'" + created_utc +"\'" + ")";
 
 
-        PreparedStatement preparedStatement1 = connection.prepareStatement();
-        PreparedStatement preparedStatement2 = connection.prepareStatement();
-        PreparedStatement preparedStatement3 = connection.prepareStatement();
-
-
-
-
-
-    }
-
-
-    public  void  excuteBatch(){
         try {
-            long [] uppdatecont = statement.executeLargeBatch();
+           preparedStatement = connection.prepareStatement(sqlinser);
+            preparedStatement.setString(1,id);
+            preparedStatement.setString(2,name);
+            preparedStatement.addBatch();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+
+
     }
 
+
+
+    public void excuteBatch(int batchSize, int lineCount) {
+        if(batchSize==lineCount){
+            try {
+                preparedStatement.executeBatch();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
+    }
 // test to save the  read
     public  void readFromDataBase(String SQLstatment, String coloumName){
 
@@ -115,4 +124,5 @@ public class DatabaseHelper  {
             }
         }
     }
+
 }
