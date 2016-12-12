@@ -54,7 +54,7 @@ public class DatabaseHelper  {
                        String subreddit_id, String subreddit, int score, String created_utc ) {
 
 
-            String sqlStatment1 = "INSERT INTO Name VALUES (" + "\'" + id + "\'," + "\'" + name + "\'" + " )";
+            String sqlStatment1 = "INSERT INTO Name (id, name)VALUES (?,?)";
             String sqlStatement2 = "INSERT INTO Sub VALUES (" + "\'" + subreddit_id + "\'," + "\'" + subreddit + "\'" + " )";
             String sqlStatement3 ="INSERT INTO Comment  VALUES  ("+ "\'" + id + "\'," +"\'" + parent_id+ "\',"+ "\'" + link_id + "\',"
                       + "\'" + author+ "\'," +"\'"
