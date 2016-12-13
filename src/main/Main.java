@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.xml.crypto.Data;
 import java.io.*;
 import java.sql.*;
 
@@ -20,27 +21,15 @@ public class Main {
 
     public static void main(String[] args) {
 //
-        setupDatabaser();
-        // saveToDataBase();
+
+         saveToDataBase();
          readFromDataBase();
 
 
     }
 
-    public static  void setupDatabaser() {
-        try {
-            connection  = DriverManager.getConnection("jdbc:sqlite:Reddit.db");
-        statement  = connection.createStatement();
-            connection.setAutoCommit(false);
-            createTables(statement);
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        }
 
 
-    }
 
 
     private static void saveToDataBase() {
@@ -48,21 +37,8 @@ public class Main {
     }
 
     private static void readFromDataBase() {
-        ResultSet resultSet;
-        try {
-            resultSet = statement.executeQuery("SELECT * FROM name WHERE  id = 'c0299an' ");
-            while (resultSet.next()) {
-                // read the result set
-                System.out.println(resultSet.getString("id"));
-
-            }
-
-
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        DatabaseHelper db = new DatabaseHelper();
+        db.readFromDataBase("SELECT * from name", "id" );
     }
 
 
@@ -78,10 +54,12 @@ public class Main {
         BufferedReader bufferedReader = null;
         int lineCount =0;
         int batchsize =10000;
+        DatabaseHelper db =   new DatabaseHelper();
+        db.createTables();
 
         try {
 
-            String sqlinser = "INSERT INTO Name (id, name) VALUES (?,?)";
+
             bufferedReader = new BufferedReader(new FileReader("/Users/db/RC_2007_10"));
             start = System.currentTimeMillis();
             String line = "";
@@ -91,12 +69,19 @@ public class Main {
                 try {
                     JSONObject jsonObject = new JSONObject(line);
                     try {
-                        preparedStatement = connection.prepareStatement(sqlinser);
-                        preparedStatement.setString(1,jsonObject.getString("id"));
-                        preparedStatement.setString(2,jsonObject.getString("name"));
-                        preparedStatement.addBatch();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
+                        db.insert(jsonObject.getString("id"),
+                                jsonObject.getString("parent_id"),
+                                jsonObject.getString("link_id"),
+                                jsonObject.getString("name"),
+                                jsonObject.getString("author"),
+                                jsonObject.getString("body"),
+                                jsonObject.getString("subreddit_id"),
+                                jsonObject.getString("subreddit"),
+                                jsonObject.getInt("score"),
+                                jsonObject.getString("created_utc")
+                        );
+
+
                     } catch (JSONException e1) {
                         e1.printStackTrace();
                     }
@@ -105,34 +90,32 @@ public class Main {
                     e1.printStackTrace();
                 }
 
-                lineCount++;
 
 
-                if( lineCount % batchsize ==  batchsize-1 ) {
+//
+                if(++lineCount % batchsize ==  0 ) {
 
-                    preparedStatement.executeBatch();
-                    connection.commit();
+                   db.excute();
 
                 }
-                preparedStatement.executeBatch();
-                preparedStatement.close();
+                db.excute();
+
 
             }
+               db.connectionCommmit();
 
-            connection.commit();
 
 
 
 
             end = (System.currentTimeMillis() - start);
             System.out.println(end);
-            connection.close();
+            db.closeConnection();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
+
         } finally {
             if (bufferedReader != null) {
                 try {
@@ -171,50 +154,8 @@ public class Main {
 
 
 
-    public  static void  createTables(Statement statement) {
-
-        try {
 
 
-            statement.execute("CREATE TABLE  IF NOT EXISTS Sub (subreddit_id TEXT, subreddit TEXT)");
-            statement.execute("CREATE TABLE IF NOT EXISTS Name (id TEXT, name TEXT)");
-            statement.execute("CREATE TABLE IF NOT EXISTS Comment (id TEXT, parent_id TEXT, link_id TEXT, author TEXT, body TEXT, subreddit_id TEXT, score INTEGER, created_utc TEXT)");
-
-
-        }catch(SQLException e){
-            System.out.println("Failed while creating the tabel ");
-            e.printStackTrace();
-
-        }
-
-    }
-
-
-
-    public  static  void insert(String id,String parent_id, String link_id,
-                       String name, String author, String body,
-                       String subreddit_id, String subreddit, int score, String created_utc ) {
-
-
-        String sqlinser = "INSERT INTO Name (id, name) VALUES (?,?)";
-        String sqlStatement2 = "INSERT INTO Sub VALUES (" + "\'" + subreddit_id + "\'," + "\'" + subreddit + "\'" + " )";
-        String sqlStatement3 ="INSERT INTO Comment  VALUES  ("+ "\'" + id + "\'," +"\'" + parent_id+ "\',"+ "\'" + link_id + "\',"
-                + "\'" + author+ "\'," +"\'"
-                + subreddit_id +"\',"
-                + score +
-                ",\'" + subreddit_id +"\'," + "\'" + created_utc +"\'" + ")";
-
-
-        try {
-            preparedStatement = connection.prepareStatement(sqlinser);
-            preparedStatement.setString(1,id);
-            preparedStatement.setString(2,name);
-            preparedStatement.addBatch();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
 
 
 
@@ -240,17 +181,6 @@ public class Main {
 //
 
 
-    public static void closeConnection() {
-        if (connection != null) {
-            try {
-
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
 }
 
 

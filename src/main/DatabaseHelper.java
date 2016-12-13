@@ -9,7 +9,10 @@ import java.sql.*;
 public class DatabaseHelper  {
     private Connection  connection;
     private  Statement  statement;
-    PreparedStatement preparedStatement;
+   private  PreparedStatement psNameTabel;
+    private
+
+
     File file;
 
 
@@ -17,6 +20,7 @@ public class DatabaseHelper  {
         try {
             connection  = DriverManager.getConnection("jdbc:sqlite:Reddit.db");
             statement  = connection.createStatement();
+            connection.setAutoCommit(false);
 
         } catch (SQLException e) {
 
@@ -53,7 +57,7 @@ public class DatabaseHelper  {
                        String subreddit_id, String subreddit, int score, String created_utc ) {
 
 
-            String sqlinser = "INSERT INTO Name (id, name) VALUES (?,?)";
+            String sqlstatment1  = "INSERT INTO Name (id, name) VALUES (?,?)";
             String sqlStatement2 = "INSERT INTO Sub VALUES (" + "\'" + subreddit_id + "\'," + "\'" + subreddit + "\'" + " )";
             String sqlStatement3 ="INSERT INTO Comment  VALUES  ("+ "\'" + id + "\'," +"\'" + parent_id+ "\',"+ "\'" + link_id + "\',"
                       + "\'" + author+ "\'," +"\'"
@@ -63,7 +67,7 @@ public class DatabaseHelper  {
 
 
         try {
-           preparedStatement = connection.prepareStatement(sqlinser);
+           preparedStatement = connection.prepareStatement();
             preparedStatement.setString(1,id);
             preparedStatement.setString(2,name);
             preparedStatement.addBatch();
@@ -78,7 +82,6 @@ public class DatabaseHelper  {
     public void excute() {
         try {
             preparedStatement.executeBatch();
-            connection.commit();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -137,6 +140,14 @@ public class DatabaseHelper  {
 
         }
     }
+
+    public void connectionCommmit() {
+        try {
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+}
 
 
