@@ -17,31 +17,36 @@ public class Main {
 
     public static void main(String[] args) {
 
-        saveToDataBase();
+     //   saveToDataBase(); // Comment this if database is already created and data is imported
         readFromDataBase();
     }
 
 
-
+    /**
+     * Method to import data to/create database
+     */
     private static void saveToDataBase() {
         readFile();
     }
 
+    /**
+     * Method to read data form database
+     */
     private static void readFromDataBase() {
         DatabaseHelper db = new DatabaseHelper();
-        db.readFromDataBase("SELECT count(body)  FROM Comment Where  author = 'eggnogdog'",1);
+        db.readFromDataBase("SELECT count(body)  FROM Comment Where  author = 'eggnogdog'",1);  // Here is where you select what to read
+        // Right now we get number of comments (count(body)), from author 'eggnogdog'.
     }
 
 
 
     /****
      * Reads the JSON file and saves the data to string
-     *
      */
     private static void readFile() {
         BufferedReader bufferedReader = null;
-        int lineCount = 0;
-        int batchSize = 10000;
+        int lineCount = 0;      // int to count what line we are on
+        int batchSize = 10000;  // Number of lines to commit at the same time
         DatabaseHelper db = new DatabaseHelper();
         db.createTables();
 
@@ -49,12 +54,14 @@ public class Main {
 
 
             bufferedReader = new BufferedReader(new FileReader("/Users/db/RC_2007_10"));
-            start = System.currentTimeMillis();
+            start = System.currentTimeMillis(); // Start timer to later calculate time it takes.
             String line;
 
             while ((line = bufferedReader.readLine())!= null) {
                 try {
-                    JSONObject jsonObject = new JSONObject(line);
+                    JSONObject jsonObject = new JSONObject(line);   // Creates JSON Object
+
+                    // Calls method with all tuple-key-names
                     try {
                         db.insert(jsonObject.getString("id"),
                                 jsonObject.getString("parent_id"),
@@ -76,24 +83,20 @@ public class Main {
                     e1.printStackTrace();
                 }
 
-                if(++lineCount % batchSize ==  0 ) {
-
+                if(++lineCount % batchSize ==  0 ) {    // Executes when lineCount reaches batchSize
                    db.execute();
 
                 }
                 db.execute();
 
-
             }
                db.connectionCommit();
 
-
-
-
-
-            end = (System.currentTimeMillis() - start);
+            end = (System.currentTimeMillis() - start); // Ends timer
             System.out.println(end);
-            db.closeConnection();
+
+            db.closeConnection();   // Closes connection
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="591ea89b-c41f-44ef-b338-78e5017b9850" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Reddit.db" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/DatabaseHelper.java" afterPath="$PROJECT_DIR$/src/main/DatabaseHelper.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/Main.java" afterPath="$PROJECT_DIR$/src/main/Main.java" />
@@ -36,25 +35,25 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-330">
-              <caret line="9" column="26" selection-start-line="9" selection-start-column="26" selection-end-line="9" selection-end-column="26" />
+            <state relative-caret-position="1545">
+              <caret line="103" column="0" selection-start-line="103" selection-start-column="0" selection-end-line="103" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#488#489#0" expanded="true" />
-                <element signature="e#514#515#0" expanded="true" />
+                <element signature="e#621#622#0" expanded="true" />
+                <element signature="e#647#648#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DatabaseHelper.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="DatabaseHelper.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/DatabaseHelper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2160">
-              <caret line="144" column="32" selection-start-line="144" selection-start-column="32" selection-end-line="144" selection-end-column="32" />
+            <state relative-caret-position="240">
+              <caret line="142" column="13" selection-start-line="142" selection-start-column="13" selection-end-line="142" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -90,8 +89,8 @@
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/data.json" />
         <option value="$PROJECT_DIR$/Reddit.db" />
-        <option value="$PROJECT_DIR$/src/main/DatabaseHelper.java" />
         <option value="$PROJECT_DIR$/src/main/Main.java" />
+        <option value="$PROJECT_DIR$/src/main/DatabaseHelper.java" />
       </list>
     </option>
   </component>
@@ -5114,7 +5113,14 @@
       <option name="project" value="LOCAL" />
       <updated>1481620689102</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="clean-up">
+      <created>1481640117447</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1481640117447</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TodoView">
@@ -5210,7 +5216,8 @@
     <MESSAGE value="added blabla" />
     <MESSAGE value="moved  code from databasehelper  to main" />
     <MESSAGE value="working but needs modification" />
-    <option name="LAST_COMMIT_MESSAGE" value="working but needs modification" />
+    <MESSAGE value="clean-up" />
+    <option name="LAST_COMMIT_MESSAGE" value="clean-up" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -5244,8 +5251,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#488#489#0" expanded="true" />
-            <element signature="e#514#515#0" expanded="true" />
+            <element signature="e#621#622#0" expanded="true" />
+            <element signature="e#647#648#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -5295,8 +5302,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#488#489#0" expanded="true" />
-            <element signature="e#514#515#0" expanded="true" />
+            <element signature="e#621#622#0" expanded="true" />
+            <element signature="e#647#648#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -5346,8 +5353,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#488#489#0" expanded="true" />
-            <element signature="e#514#515#0" expanded="true" />
+            <element signature="e#621#622#0" expanded="true" />
+            <element signature="e#647#648#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -5398,8 +5405,8 @@
           <caret line="67" column="43" selection-start-line="67" selection-start-column="43" selection-end-line="67" selection-end-column="43" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#488#489#0" expanded="true" />
-            <element signature="e#514#515#0" expanded="true" />
+            <element signature="e#621#622#0" expanded="true" />
+            <element signature="e#647#648#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -5457,8 +5464,8 @@
           <caret line="68" column="40" selection-start-line="68" selection-start-column="40" selection-end-line="68" selection-end-column="40" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#488#489#0" expanded="true" />
-            <element signature="e#514#515#0" expanded="true" />
+            <element signature="e#621#622#0" expanded="true" />
+            <element signature="e#647#648#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -5508,8 +5515,8 @@
           <caret line="68" column="40" selection-start-line="68" selection-start-column="40" selection-end-line="68" selection-end-column="40" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#488#489#0" expanded="true" />
-            <element signature="e#514#515#0" expanded="true" />
+            <element signature="e#621#622#0" expanded="true" />
+            <element signature="e#647#648#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -5550,8 +5557,8 @@
           <caret line="27" column="38" selection-start-line="27" selection-start-column="38" selection-end-line="27" selection-end-column="38" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#488#489#0" expanded="true" />
-            <element signature="e#514#515#0" expanded="true" />
+            <element signature="e#621#622#0" expanded="true" />
+            <element signature="e#647#648#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -5613,24 +5620,24 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/DatabaseHelper.java">
+    <entry file="file://$PROJECT_DIR$/src/main/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2160">
-          <caret line="144" column="32" selection-start-line="144" selection-start-column="32" selection-end-line="144" selection-end-column="32" />
+        <state relative-caret-position="1545">
+          <caret line="103" column="0" selection-start-line="103" selection-start-column="0" selection-end-line="103" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#621#622#0" expanded="true" />
+            <element signature="e#647#648#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/Main.java">
+    <entry file="file://$PROJECT_DIR$/src/main/DatabaseHelper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-330">
-          <caret line="9" column="26" selection-start-line="9" selection-start-column="26" selection-end-line="9" selection-end-column="26" />
+        <state relative-caret-position="240">
+          <caret line="142" column="13" selection-start-line="142" selection-start-column="13" selection-end-line="142" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#488#489#0" expanded="true" />
-            <element signature="e#514#515#0" expanded="true" />
           </folding>
         </state>
       </provider>

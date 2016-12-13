@@ -12,11 +12,12 @@ public class DatabaseHelper {
     private PreparedStatement psCommentTable;
 
 
+
     public DatabaseHelper() {
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:Reddit.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:Reddit.db");  // Sets up connection
             statement = connection.createStatement();
-            connection.setAutoCommit(false);
+            connection.setAutoCommit(false);    // Manual commit
 
         } catch (SQLException e) {
 
@@ -24,11 +25,14 @@ public class DatabaseHelper {
         }
     }
 
-
+    /**
+     * Method where we create our tables
+     */
     public void createTables() {
 
         try {
-
+            // Create tables for sub, name and comment
+            // SUB(sub_id, sub), NAME(id, name), COMMENT(rest + sub_id + id)
             statement.execute("CREATE TABLE  IF NOT EXISTS Sub (subreddit_id TEXT, subreddit TEXT)");
             statement.execute("CREATE TABLE IF NOT EXISTS Name(id TEXT, name TEXT)");
             statement.execute("CREATE TABLE IF NOT EXISTS Comment (id TEXT, parent_id TEXT, link_id TEXT, author TEXT, body TEXT, subreddit_id TEXT, score INTEGER, created_utc TEXT)");
@@ -47,12 +51,13 @@ public class DatabaseHelper {
                        String subreddit_id, String subreddit, int score, String created_utc) {
 
 
+        // Creates are statements where '?' will be our values
         String sqlStatement1 = "INSERT INTO Name (id, name) VALUES (?,?)";
         String sqlStatement2 = "INSERT INTO Sub (subreddit_id, subreddit) VALUES (?,?)";
         String sqlStatement3 = "INSERT INTO Comment (id, parent_id, link_id, author, body, subreddit_id, score, created_utc) VALUES (?,?,?,?,?,?,?,?)";
 
 
-
+        // Inserts values
         try {
             psNameTable = connection.prepareStatement(sqlStatement1);
             psNameTable.setString(1, id);
