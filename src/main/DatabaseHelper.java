@@ -3,15 +3,13 @@ package main;
 import java.io.File;
 import java.sql.*;
 
-/**
- * Created by MohamedOsman on 2016-12-08.
- */
+
 public class DatabaseHelper {
     private Connection connection;
     private Statement statement;
-    private PreparedStatement psNameTabel;
-    private PreparedStatement psSubTabel;
-    private PreparedStatement psCommentTabel;
+    private PreparedStatement psNameTable;
+    private PreparedStatement psSubTable;
+    private PreparedStatement psCommentTable;
 
 
     File file;
@@ -27,15 +25,12 @@ public class DatabaseHelper {
 
             e.printStackTrace();
         }
-
-
     }
 
 
     public void createTables() {
 
         try {
-
 
             statement.execute("CREATE TABLE  IF NOT EXISTS Sub (subreddit_id TEXT, subreddit TEXT)");
             statement.execute("CREATE TABLE IF NOT EXISTS Name (id TEXT, name TEXT)");
@@ -58,30 +53,34 @@ public class DatabaseHelper {
 
         String sqlstatment1 = "INSERT INTO Name (id, name) VALUES (?,?)";
         String sqlStatement2 = "INSERT INTO Sub (subreddit_id, subreddit) VALUES (?,?)";
-        String sqlStatement3 = "INSERT INTO Comment  VALUES  (" + "\'" + id + "\'," + "\'" + parent_id + "\'," + "\'" + link_id + "\',"
-                + "\'" + author + "\'," + "\'"
-                + subreddit_id + "\',"
-                + score +
-                ",\'" + subreddit_id + "\'," + "\'" + created_utc + "\'" + ")";
+        String sqlStatement3 = "INSERT INTO Comment (id, parent_id, link_id, author, body, subreddit_id, score, created_utc) VALUES (?,?,?,?,?,?,?,?)";
+
 
 
         try {
-            psNameTabel = connection.prepareStatement(sqlstatment1);
-            psNameTabel.setString(1, id);
-            psNameTabel.setString(2, name);
+            psNameTable = connection.prepareStatement(sqlstatment1);
+            psNameTable.setString(1, id);
+            psNameTable.setString(2, name);
 
-            psSubTabel = connection.prepareStatement(sqlStatement2);
-            psSubTabel.setString(1,subreddit_id);
-            psSubTabel.setString(2,subreddit);
+            psSubTable = connection.prepareStatement(sqlStatement2);
+            psSubTable.setString(1,subreddit_id);
+            psSubTable.setString(2,subreddit);
+
+            psCommentTable = connection.prepareStatement(sqlStatement3);
+            psCommentTable.setString(1, id);
+            psCommentTable.setString(2, parent_id);
+            psCommentTable.setString(3, link_id);
+            psCommentTable.setString(4, author);
+            psCommentTable.setString(5, body);
+            psCommentTable.setString(6, subreddit_id);
+            psCommentTable.setInt(7, score);
+            psCommentTable.setString(8, created_utc);
 
 
+            psNameTable.addBatch();
+            psSubTable.addBatch();
+            psCommentTable.addBatch();
 
-
-
-
-
-            psNameTabel.addBatch();
-            psSubTabel.addBatch();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -91,7 +90,7 @@ public class DatabaseHelper {
 
     public void excute() {
         try {
-            psNameTabel.executeBatch();
+            psNameTable.executeBatch();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -125,7 +124,6 @@ public class DatabaseHelper {
                 System.out.println(rs.getString(coloumName));
 
             }
-
 
         } catch (SQLException e) {
             e.printStackTrace();
