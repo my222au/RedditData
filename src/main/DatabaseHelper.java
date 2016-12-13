@@ -13,21 +13,19 @@ public class DatabaseHelper  {
     File file;
 
 
-    public Statement connectToDatabase(){
+    public DatabaseHelper() {
+        try {
+            connection  = DriverManager.getConnection("jdbc:sqlite:Reddit.db");
+            statement  = connection.createStatement();
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
 
 
-            try {
-                connection  = DriverManager.getConnection("jdbc:sqlite:Reddit.db");
-                statement  = connection.createStatement();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-
-
-
-        return  statement;
     }
+
 
 
     public  void createTables() {
@@ -73,24 +71,37 @@ public class DatabaseHelper  {
             e.printStackTrace();
         }
 
-
-
     }
 
 
 
+    public void excute() {
+        try {
+            preparedStatement.executeBatch();
+            connection.commit();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public void excuteBatch(int batchSize, int lineCount) {
-        if(batchSize==lineCount){
-            try {
-                preparedStatement.executeBatch();
+        if(lineCount % batchSize == 0)
+        try {
+            System.out.println("excutetd Batch ");
+             int [] resluts  =    preparedStatement.executeBatch();
+            connection.commit();
+
+            System.out.println(resluts);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+
+
         }
 
 
 
-    }
+
 // test to save the  read
     public  void readFromDataBase(String SQLstatment, String coloumName){
 
@@ -116,8 +127,7 @@ public class DatabaseHelper  {
 
 
     public void close() {
-        if(connection!=null){
-            try {
+        try{
                 connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -125,4 +135,4 @@ public class DatabaseHelper  {
         }
     }
 
-}
+

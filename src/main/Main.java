@@ -12,28 +12,61 @@ import java.sql.*;
 public class Main {
     private static long start;
     private static long end;
+    private  static  Statement statement;
+    private static  Connection connection;
+    private static  PreparedStatement preparedStatement;
 
 
 
     public static void main(String[] args) {
 //
-        saveToDataBase();
-//        readFromDataBase();
+        setupDatabaser();
+       // saveToDataBase();
+        readFromDataBase();
 
 
     }
+
+    public static  void setupDatabaser() {
+        try {
+            connection  = DriverManager.getConnection("jdbc:sqlite:Reddit.db");
+        statement  = connection.createStatement();
+            connection.setAutoCommit(false);
+            createTables(statement);
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+
+
+    }
+
 
     private static void saveToDataBase() {
         readFile();
     }
 
     private static void readFromDataBase() {
-        DatabaseHelper db = new DatabaseHelper();
-        db.connectToDatabase();
-        db.readFromDataBase("SELECT * FROM Comment", "author");
+        ResultSet resultSet;
+        try {
+            resultSet = statement.executeQuery("SELECT * FROM name");
+            while (resultSet.next()) {
+                // read the result set
+                System.out.println(resultSet.getString("id"));
 
-        db.close();
+            }
+
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
+
+
 
 
     /****
@@ -42,44 +75,57 @@ public class Main {
      * @return string data.
      */
     private static void readFile() {
-
         BufferedReader bufferedReader = null;
-        //  "/Users/macbookpro/Desktop/RC_2007_10.json"
-        DatabaseHelper db = new DatabaseHelper();
-        db.connectToDatabase();
-        db.createTables();
         int lineCount =0;
-        StringBuilder sb = new StringBuilder();
+        int batchsize =10000;
+
         try {
             String line = "";
+            String sqlinser = "INSERT INTO Name (id, name) VALUES (?,?)";
             bufferedReader = new BufferedReader(new FileReader("/Users/db/RC_2007_10"));
             start = System.currentTimeMillis();
             while ((line = bufferedReader.readLine()) != null) {
-                lineCount++;
+
+
                 try {
                     JSONObject jsonObject = new JSONObject(line);
-                    db.insert(jsonObject.getString("id"),
-                            jsonObject.getString("parent_id"),
-                            jsonObject.getString("link_id"),
-                            jsonObject.getString("name"),
-                            jsonObject.getString("author"),
-                            jsonObject.getString("body"),
-                            jsonObject.getString("subreddit_id"),
-                            jsonObject.getString("subreddit"),
-                            jsonObject.getInt("score"),
-                            jsonObject.getString("created_utc"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    try {
+                        preparedStatement = connection.prepareStatement(sqlinser);
+                        preparedStatement.setString(1,jsonObject.getString("id"));
+                        preparedStatement.setString(2,jsonObject.getString("name"));
+                        preparedStatement.addBatch();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+                    }
+
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
                 }
-                db.excuteBatch(10000,lineCount);
+                if(++lineCount % batchsize ==  0 )
+
+                    preparedStatement.executeBatch();
+                        connection.commit();
+
+
             }
+            preparedStatement.executeBatch();
+            connection.commit();
+            preparedStatement.close();
+
+
+
+
 
             end = (System.currentTimeMillis() - start);
             System.out.println(end);
-            db.close();
+            connection.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             if (bufferedReader != null) {
@@ -91,5 +137,102 @@ public class Main {
             }
         }
     }
+
+
+    public static void excute() {
+        try {
+            preparedStatement.executeBatch();
+            connection.commit();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void excuteBatch(int batchSize, int lineCount) {
+//        if(lineCount % batchSize == 0)
+//            try {
+//                System.out.println("excutetd Batch ");
+//                int [] resluts  =    preparedStatement.executeBatch();
+//                connection.commit();
+//
+//                System.out.println(resluts);
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+
+
+    }
+
+
+
+    public  static void  createTables(Statement statement) {
+
+        try {
+
+
+            statement.execute("CREATE TABLE  IF NOT EXISTS Sub (subreddit_id TEXT, subreddit TEXT)");
+            statement.execute("CREATE TABLE IF NOT EXISTS Name (id TEXT, name TEXT)");
+            statement.execute("CREATE TABLE IF NOT EXISTS Comment (id TEXT, parent_id TEXT, link_id TEXT, author TEXT, body TEXT, subreddit_id TEXT, score INTEGER, created_utc TEXT)");
+
+
+        }catch(SQLException e){
+            System.out.println("Failed while creating the tabel ");
+            e.printStackTrace();
+
+        }
+
+    }
+
+
+
+    public  static  void insert(String id,String parent_id, String link_id,
+                       String name, String author, String body,
+                       String subreddit_id, String subreddit, int score, String created_utc ) {
+
+
+        String sqlinser = "INSERT INTO Name (id, name) VALUES (?,?)";
+        String sqlStatement2 = "INSERT INTO Sub VALUES (" + "\'" + subreddit_id + "\'," + "\'" + subreddit + "\'" + " )";
+        String sqlStatement3 ="INSERT INTO Comment  VALUES  ("+ "\'" + id + "\'," +"\'" + parent_id+ "\',"+ "\'" + link_id + "\',"
+                + "\'" + author+ "\'," +"\'"
+                + subreddit_id +"\',"
+                + score +
+                ",\'" + subreddit_id +"\'," + "\'" + created_utc +"\'" + ")";
+
+
+        try {
+            preparedStatement = connection.prepareStatement(sqlinser);
+            preparedStatement.setString(1,id);
+            preparedStatement.setString(2,name);
+            preparedStatement.addBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+//    public static void readFromDataBase(String SQLstatment, String coloumName){
+//
+//        ResultSet resultSet;
+//        try {
+//            resultSet = statement.executeQuery(SQLstatment);
+//            while (resultSet.next()) {
+//                // read the result set
+//                System.out.println(resultSet.getString(coloumName));
+//
+//            }
+//
+//
+//
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//
+
+
 
 }
