@@ -21,9 +21,8 @@ public class Main {
 
     public static void main(String[] args) {
 //
-
-         saveToDataBase();
-         readFromDataBase();
+        saveToDataBase();
+        readFromDataBase();
 
 
     }
@@ -38,7 +37,7 @@ public class Main {
 
     private static void readFromDataBase() {
         DatabaseHelper db = new DatabaseHelper();
-        db.readFromDataBase("SELECT * from name", "id" );
+        db.readFromDataBase("SELECT count(body)  FROM Comment Where  author = 'eggnogdog'",1);
     }
 
 

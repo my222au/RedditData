@@ -32,9 +32,9 @@ public class DatabaseHelper {
 
         try {
 
-            statement.execute("CREATE TABLE  IF NOT EXISTS Sub (subreddit_id TEXT, subreddit TEXT)");
-            statement.execute("CREATE TABLE IF NOT EXISTS Name (id TEXT, name TEXT)");
-            statement.execute("CREATE TABLE IF NOT EXISTS Comment (id TEXT, parent_id TEXT, link_id TEXT, author TEXT, body TEXT, subreddit_id TEXT, score INTEGER, created_utc TEXT)");
+            statement.execute("CREATE TABLE  IF NOT EXISTS Sub (subreddit_id TEXT  ,subreddit TEXT)");
+            statement.execute("CREATE TABLE IF NOT EXISTS Name(id TEXT PRIMARY KEY , name TEXT)");
+            statement.execute("CREATE TABLE IF NOT EXISTS Comment (id TEXT PRIMARY KEY , parent_id TEXT, link_id TEXT, author TEXT, body TEXT, subreddit_id TEXT, score INTEGER NOT NULL, created_utc TEXT, foreign KEY(id) references Name(id))");
 
 
         } catch (SQLException e) {
@@ -91,6 +91,8 @@ public class DatabaseHelper {
     public void excute() {
         try {
             psNameTable.executeBatch();
+            psCommentTable.executeBatch();
+            psSubTable.executeBatch();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -114,14 +116,14 @@ public class DatabaseHelper {
 
 
     // test to save the  read
-    public void readFromDataBase(String SQLstatment, String coloumName) {
+    public void readFromDataBase(String SQLstatment,int num){
 
         ResultSet rs = null;
         try {
             rs = statement.executeQuery(SQLstatment);
             while (rs.next()) {
                 // read the result set
-                System.out.println(rs.getString(coloumName));
+                System.out.println(rs.getInt(num));
 
             }
 
