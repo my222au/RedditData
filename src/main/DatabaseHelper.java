@@ -126,13 +126,17 @@ public class DatabaseHelper  {
 
 
 
-    public void close() {
-        try{
+    public void closeConnection() {
+        if (connection != null) {
+            try {
+
                 connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+
         }
+    }
     }
 
 

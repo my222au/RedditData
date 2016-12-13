@@ -21,8 +21,8 @@ public class Main {
     public static void main(String[] args) {
 //
         setupDatabaser();
-       // saveToDataBase();
-        readFromDataBase();
+        // saveToDataBase();
+         readFromDataBase();
 
 
     }
@@ -50,7 +50,7 @@ public class Main {
     private static void readFromDataBase() {
         ResultSet resultSet;
         try {
-            resultSet = statement.executeQuery("SELECT * FROM name");
+            resultSet = statement.executeQuery("SELECT * FROM name WHERE  id = 'c0299an' ");
             while (resultSet.next()) {
                 // read the result set
                 System.out.println(resultSet.getString("id"));
@@ -80,11 +80,12 @@ public class Main {
         int batchsize =10000;
 
         try {
-            String line = "";
+
             String sqlinser = "INSERT INTO Name (id, name) VALUES (?,?)";
             bufferedReader = new BufferedReader(new FileReader("/Users/db/RC_2007_10"));
             start = System.currentTimeMillis();
-            while ((line = bufferedReader.readLine()) != null) {
+            String line = "";
+            while ((line = bufferedReader.readLine())!= null) {
 
 
                 try {
@@ -103,17 +104,22 @@ public class Main {
                 } catch (JSONException e1) {
                     e1.printStackTrace();
                 }
-                if(++lineCount % batchsize ==  0 )
+
+                lineCount++;
+
+
+                if( lineCount % batchsize ==  batchsize-1 ) {
 
                     preparedStatement.executeBatch();
-                        connection.commit();
+                    connection.commit();
 
+                }
+                preparedStatement.executeBatch();
+                preparedStatement.close();
 
             }
-            preparedStatement.executeBatch();
-            connection.commit();
-            preparedStatement.close();
 
+            connection.commit();
 
 
 
@@ -234,5 +240,18 @@ public class Main {
 //
 
 
+    public static void closeConnection() {
+        if (connection != null) {
+            try {
 
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
 }
+
+
+
