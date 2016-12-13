@@ -81,6 +81,7 @@ public class DatabaseHelper {
 
 
             psNameTabel.addBatch();
+            psSubTabel.addBatch();
         } catch (SQLException e) {
             e.printStackTrace();
         }
