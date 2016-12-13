@@ -1,12 +1,8 @@
 package main;
 
-import jdk.nashorn.internal.parser.JSONParser;
-import jdk.nashorn.internal.parser.Parser;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.sql.*;
 
@@ -20,14 +16,10 @@ public class Main {
 
 
     public static void main(String[] args) {
-//
+
         saveToDataBase();
         readFromDataBase();
-
-
     }
-
-
 
 
 
@@ -42,18 +34,15 @@ public class Main {
 
 
 
-
-
     /****
-     * Reads the  josn file  and saves the data to string
+     * Reads the JSON file and saves the data to string
      *
-     * @return string data.
      */
     private static void readFile() {
         BufferedReader bufferedReader = null;
-        int lineCount =0;
-        int batchsize =10000;
-        DatabaseHelper db =   new DatabaseHelper();
+        int lineCount = 0;
+        int batchSize = 10000;
+        DatabaseHelper db = new DatabaseHelper();
         db.createTables();
 
         try {
@@ -61,10 +50,9 @@ public class Main {
 
             bufferedReader = new BufferedReader(new FileReader("/Users/db/RC_2007_10"));
             start = System.currentTimeMillis();
-            String line = "";
+            String line;
+
             while ((line = bufferedReader.readLine())!= null) {
-
-
                 try {
                     JSONObject jsonObject = new JSONObject(line);
                     try {
@@ -80,7 +68,6 @@ public class Main {
                                 jsonObject.getString("created_utc")
                         );
 
-
                     } catch (JSONException e1) {
                         e1.printStackTrace();
                     }
@@ -89,19 +76,16 @@ public class Main {
                     e1.printStackTrace();
                 }
 
+                if(++lineCount % batchSize ==  0 ) {
 
-
-//
-                if(++lineCount % batchsize ==  0 ) {
-
-                   db.excute();
+                   db.execute();
 
                 }
-                db.excute();
+                db.execute();
 
 
             }
-               db.connectionCommmit();
+               db.connectionCommit();
 
 
 
@@ -127,7 +111,7 @@ public class Main {
     }
 
 
-    public static void excute() {
+    public static void execute() {
         try {
             preparedStatement.executeBatch();
             connection.commit();
@@ -136,7 +120,7 @@ public class Main {
             e.printStackTrace();
         }
     }
-    public static void excuteBatch(int batchSize, int lineCount) {
+//    public static void executeBatch(int batchSize, int lineCount) {
 //        if(lineCount % batchSize == 0)
 //            try {
 //                System.out.println("excutetd Batch ");
@@ -147,15 +131,9 @@ public class Main {
 //            } catch (SQLException e) {
 //                e.printStackTrace();
 //            }
-
-
-    }
-
-
-
-
-
-
+//
+//
+//    }
 
 
 //    public static void readFromDataBase(String SQLstatment, String coloumName){

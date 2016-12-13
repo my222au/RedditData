@@ -12,9 +12,6 @@ public class DatabaseHelper {
     private PreparedStatement psCommentTable;
 
 
-    File file;
-
-
     public DatabaseHelper() {
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:Reddit.db");
@@ -32,17 +29,16 @@ public class DatabaseHelper {
 
         try {
 
-            statement.execute("CREATE TABLE  IF NOT EXISTS Sub (subreddit_id TEXT  ,subreddit TEXT)");
-            statement.execute("CREATE TABLE IF NOT EXISTS Name(id TEXT PRIMARY KEY , name TEXT)");
-            statement.execute("CREATE TABLE IF NOT EXISTS Comment (id TEXT PRIMARY KEY , parent_id TEXT, link_id TEXT, author TEXT, body TEXT, subreddit_id TEXT, score INTEGER NOT NULL, created_utc TEXT, foreign KEY(id) references Name(id))");
+            statement.execute("CREATE TABLE  IF NOT EXISTS Sub (subreddit_id TEXT, subreddit TEXT)");
+            statement.execute("CREATE TABLE IF NOT EXISTS Name(id TEXT, name TEXT)");
+            statement.execute("CREATE TABLE IF NOT EXISTS Comment (id TEXT, parent_id TEXT, link_id TEXT, author TEXT, body TEXT, subreddit_id TEXT, score INTEGER, created_utc TEXT)");
 
 
         } catch (SQLException e) {
-            System.out.println("Failed while creating the tabel ");
+            System.out.println("Failed while creating the table ");
             e.printStackTrace();
 
         }
-
     }
 
 
@@ -51,14 +47,14 @@ public class DatabaseHelper {
                        String subreddit_id, String subreddit, int score, String created_utc) {
 
 
-        String sqlstatment1 = "INSERT INTO Name (id, name) VALUES (?,?)";
+        String sqlStatement1 = "INSERT INTO Name (id, name) VALUES (?,?)";
         String sqlStatement2 = "INSERT INTO Sub (subreddit_id, subreddit) VALUES (?,?)";
         String sqlStatement3 = "INSERT INTO Comment (id, parent_id, link_id, author, body, subreddit_id, score, created_utc) VALUES (?,?,?,?,?,?,?,?)";
 
 
 
         try {
-            psNameTable = connection.prepareStatement(sqlstatment1);
+            psNameTable = connection.prepareStatement(sqlStatement1);
             psNameTable.setString(1, id);
             psNameTable.setString(2, name);
 
@@ -84,11 +80,10 @@ public class DatabaseHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
 
-    public void excute() {
+    public void execute() {
         try {
             psNameTable.executeBatch();
             psCommentTable.executeBatch();
@@ -99,7 +94,7 @@ public class DatabaseHelper {
         }
     }
 
-//    public void excuteBatch(int batchSize, int lineCount) {
+//    public void executeBatch(int batchSize, int lineCount) {
 //        if (lineCount % batchSize == 0)
 //            try {
 //                System.out.println("excutetd Batch ");
@@ -116,11 +111,11 @@ public class DatabaseHelper {
 
 
     // test to save the  read
-    public void readFromDataBase(String SQLstatment,int num){
+    public void readFromDataBase(String SQLstatement,int num){
 
         ResultSet rs = null;
         try {
-            rs = statement.executeQuery(SQLstatment);
+            rs = statement.executeQuery(SQLstatement);
             while (rs.next()) {
                 // read the result set
                 System.out.println(rs.getInt(num));
@@ -145,7 +140,7 @@ public class DatabaseHelper {
         }
     }
 
-    public void connectionCommmit() {
+    public void connectionCommit() {
         try {
             connection.commit();
         } catch (SQLException e) {
