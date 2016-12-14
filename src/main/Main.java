@@ -13,12 +13,18 @@ public class Main {
     private static  Connection connection;
     private static  PreparedStatement preparedStatement;
 
+    private static DatabaseHelper db = new DatabaseHelper();
+
 
 
     public static void main(String[] args) {
 
      //   saveToDataBase(); // Comment this if database is already created and data is imported
-        readFromDataBase();
+
+    //    printNumCommentsSpecificUser("Captain-Obvious");
+        printNumLolComments();
+
+
     }
 
 
@@ -32,11 +38,22 @@ public class Main {
     /**
      * Method to read data form database
      */
-    private static void readFromDataBase() {
-        DatabaseHelper db = new DatabaseHelper();
-        db.readFromDataBase("SELECT count(body)  FROM Comment Where  author = 'eggnogdog'",1);  // Here is where you select what to read
+    private static void printNumCommentsSpecificUser(String user) {
+        db.readFromDataBase("SELECT count(body) FROM Comment Where  author = '" + user + "'",1);  // Here is where you select what to read
         // Right now we get number of comments (count(body)), from author 'eggnogdog'.
     }
+
+    private static void printNumCommentsSpecificSubredditPerDay(String subreddit) {
+
+    }
+
+    private static void printNumLolComments() {
+        db.readFromDataBase("SELECT count(body) FROM Comment WHERE body LIKE '%lol%'",1);
+    }
+
+
+
+
 
 
 
@@ -123,6 +140,7 @@ public class Main {
             e.printStackTrace();
         }
     }
+
 //    public static void executeBatch(int batchSize, int lineCount) {
 //        if(lineCount % batchSize == 0)
 //            try {

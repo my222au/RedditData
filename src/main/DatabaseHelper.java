@@ -7,7 +7,7 @@ import java.sql.*;
 public class DatabaseHelper {
     private Connection connection;
     private Statement statement;
-    private PreparedStatement psNameTable;
+ //   private PreparedStatement psNameTable;
     private PreparedStatement psSubTable;
     private PreparedStatement psCommentTable;
 
@@ -34,8 +34,8 @@ public class DatabaseHelper {
             // Create tables for sub, name and comment
             // SUB(sub_id, sub), NAME(id, name), COMMENT(rest + sub_id + id)
             statement.execute("CREATE TABLE  IF NOT EXISTS Sub (subreddit_id TEXT, subreddit TEXT)");
-            statement.execute("CREATE TABLE IF NOT EXISTS Name(id TEXT, name TEXT)");
-            statement.execute("CREATE TABLE IF NOT EXISTS Comment (id TEXT, parent_id TEXT, link_id TEXT, author TEXT, body TEXT, subreddit_id TEXT, score INTEGER, created_utc TEXT)");
+        //    statement.execute("CREATE TABLE IF NOT EXISTS Name(id TEXT, name TEXT)");
+            statement.execute("CREATE TABLE IF NOT EXISTS Comment (id TEXT, parent_id TEXT, link_id TEXT, name TEXT, author TEXT, body TEXT, subreddit_id TEXT, score INTEGER, created_utc TEXT)");
 
 
         } catch (SQLException e) {
@@ -52,16 +52,16 @@ public class DatabaseHelper {
 
 
         // Creates are statements where '?' will be our values
-        String sqlStatement1 = "INSERT INTO Name (id, name) VALUES (?,?)";
+//        String sqlStatement1 = "INSERT INTO Name (id, name) VALUES (?,?)";
         String sqlStatement2 = "INSERT INTO Sub (subreddit_id, subreddit) VALUES (?,?)";
-        String sqlStatement3 = "INSERT INTO Comment (id, parent_id, link_id, author, body, subreddit_id, score, created_utc) VALUES (?,?,?,?,?,?,?,?)";
+        String sqlStatement3 = "INSERT INTO Comment (id, parent_id, link_id, name, author, body, subreddit_id, score, created_utc) VALUES (?,?,?,?,?,?,?,?,?)";
 
 
         // Inserts values
         try {
-            psNameTable = connection.prepareStatement(sqlStatement1);
-            psNameTable.setString(1, id);
-            psNameTable.setString(2, name);
+//            psNameTable = connection.prepareStatement(sqlStatement1);
+//            psNameTable.setString(1, id);
+//            psNameTable.setString(2, name);
 
             psSubTable = connection.prepareStatement(sqlStatement2);
             psSubTable.setString(1,subreddit_id);
@@ -71,14 +71,15 @@ public class DatabaseHelper {
             psCommentTable.setString(1, id);
             psCommentTable.setString(2, parent_id);
             psCommentTable.setString(3, link_id);
-            psCommentTable.setString(4, author);
-            psCommentTable.setString(5, body);
-            psCommentTable.setString(6, subreddit_id);
-            psCommentTable.setInt(7, score);
-            psCommentTable.setString(8, created_utc);
+            psCommentTable.setString(4, name);
+            psCommentTable.setString(5, author);
+            psCommentTable.setString(6, body);
+            psCommentTable.setString(7, subreddit_id);
+            psCommentTable.setInt(8, score);
+            psCommentTable.setString(9, created_utc);
 
 
-            psNameTable.addBatch();
+//            psNameTable.addBatch();
             psSubTable.addBatch();
             psCommentTable.addBatch();
 
@@ -90,7 +91,7 @@ public class DatabaseHelper {
 
     public void execute() {
         try {
-            psNameTable.executeBatch();
+//            psNameTable.executeBatch();
             psCommentTable.executeBatch();
             psSubTable.executeBatch();
 
@@ -123,7 +124,8 @@ public class DatabaseHelper {
             rs = statement.executeQuery(SQLstatement);
             while (rs.next()) {
                 // read the result set
-                System.out.println(rs.getInt(num));
+//                System.out.println(rs.getInt(num));
+                System.out.println(rs.getString(num));
 
             }
 
