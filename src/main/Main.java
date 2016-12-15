@@ -27,25 +27,22 @@ public class Main {
 //        printNumCommentsSpecificSubredditPerDay("politics");
 //        printSubrettidsOfSpecificLinkID("t3_5ykb7");
 
-//        printMaxAndMinScores();
-
-         db.readFromDataBase("SELECT subreddit from Sub",1);
+        printMaxAndMinScores();
 
     }
 
     private static void printMaxAndMinScores() {
 //       ResultSet rs = db.getResultSet("SELECT (SELECT MAX(score) FROM Comment), (SELECT MIN(score) FROM Comment)");
-        ResultSet rs = db.getResultSet("SELECT author, MIN(sum_score) FROM( SELECT author, SUM(score) AS sum_score FROM Comment GROUP BY author), (SELECT author from Sub)");
+        ResultSet rs = db.getResultSet("SELECT author, MIN(sum_score) FROM( SELECT author, SUM(score) AS sum_score FROM Comment GROUP BY author)" +
+                "UNION SELECT author, MAX(sum_score) FROM( SELECT author, SUM(score) AS sum_score FROM Comment GROUP BY author)");
 
         try {
             while(rs.next()) {
                 System.out.println(rs.getString(1) + "\tSum: " + rs.getString(2));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
