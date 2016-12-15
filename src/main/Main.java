@@ -27,14 +27,14 @@ public class Main {
 //        saveToDataBase(); // Comment this if database is already created and data is imported
 
 //        printNumCommentsSpecificUser("Captain-Obvious");
-//        printNumLolComments();
+        printNumLolComments();
 //        printNumCommentsSpecificSubredditPerDay("politics");
 //        printSubrettidsOfSpecificLinkID("t3_5ykb7");
 //        printMaxAndMinUserScores();
 //        printMaxAndMinSubredditScores();
+//        printUsersWhoPostedOnOnlyOneSubreddit();
 
-        printUsersWhoPostedOnOnlyOneSubreddit();
-
+//        printUsersWhoInteractedWith("ejcross");
     }
 
     /**
@@ -145,8 +145,8 @@ public class Main {
     private static void printMaxAndMinSubredditScores() {
 
         // reddit.com does not count as a subreddit
-        ResultSet rs = db.getResultSet("SELECT subreddit, MAX(max_score) FROM( SELECT subreddit, SUM(score) AS max_score FROM Comment WHERE subreddit IS NOT 'reddit.com' GROUP BY subreddit)" +
-                "UNION SELECT subreddit, MIN(min_score) FROM( SELECT subreddit, SUM(score) AS min_score FROM Comment WHERE subreddit IS NOT 'reddit.com' GROUP BY subreddit)");
+        ResultSet rs = db.getResultSet("SELECT subreddit, MAX(max_score) FROM( SELECT subreddit, SUM(score) AS max_score FROM Comment GROUP BY subreddit)" +
+                "UNION SELECT subreddit, MIN(min_score) FROM( SELECT subreddit, SUM(score) AS min_score FROM Comment GROUP BY subreddit)");
 
         try {
             while(rs.next()) {
@@ -158,11 +158,36 @@ public class Main {
     }
 
     /**
+     * 7. Given a specific user, list all the users he or she has potentially interacted with (i.e., everyone who as
+     *    commented on a link that the specific user has commented on).
+     */
+    private static void printUsersWhoInteractedWith(String user) {
+        ResultSet rs = db.getResultSet("SELECT a_link FROM (SELECT link_id AS a_link FROM Comment WHERE author = '"+user+"')" +
+                "SELECT author FROM Comment");
+
+        rs = db.getResultSet("SELECT DISTINCT author FROM Comment WHERE author IS NOT '"+user+"' AND link_id IN" +
+                " (SELECT DISTINCT link_id FROM Comment WHERE author = '"+user+"' ORDER BY author)");
+
+
+
+        // "SELECT DISTINCT author FROM reddit WHERE not author=? and link_id IN
+        // (SELECT DISTINCT link_id FROM reddit WHERE author=?) ORDER BY author"
+
+        try {
+            while(rs.next()) {
+                System.out.println(rs.getString(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 8. Which users has only posted to a single subreddit?
      */
     private static void printUsersWhoPostedOnOnlyOneSubreddit() {
-        ResultSet rs = db.getResultSet("SELECT * FROM ( SELECT DISTINCT author, subreddit FROM Comment WHERE subreddit IS NOT 'reddit.com' GROUP BY subreddit HAVING count(subreddit) == 1)");
-
+        ResultSet rs = db.getResultSet("SELECT * FROM ( SELECT DISTINCT author, subreddit FROM Comment  GROUP BY subreddit HAVING count(subreddit) == 1)");
+//        WHERE subreddit IS NOT 'reddit.com'
         try {
             while(rs.next()) {
                 System.out.println(rs.getString(1) + "\t Subreddit: " + rs.getString(2));

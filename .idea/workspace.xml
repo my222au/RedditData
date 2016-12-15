@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="591ea89b-c41f-44ef-b338-78e5017b9850" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Reddit.db" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Task 3 Reddit Data/main/Main.class" afterPath="$PROJECT_DIR$/out/production/Task 3 Reddit Data/main/Main.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/Main.java" afterPath="$PROJECT_DIR$/src/main/Main.java" />
@@ -29,12 +28,12 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="101" column="63" selection-start-line="101" selection-start-column="63" selection-end-line="101" selection-end-column="63" />
+            <state relative-caret-position="-2055">
+              <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#3840#3841#0" expanded="true" />
-                <element signature="e#3866#3867#0" expanded="true" />
+                <element signature="e#7076#7077#0" expanded="true" />
+                <element signature="e#7102#7103#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -5165,7 +5164,21 @@
       <option name="project" value="LOCAL" />
       <updated>1481816888723</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Query 6. printMaxAndMinSubredditScores done!">
+      <created>1481818861246</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1481818861246</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Query 8. printUsersWhoPostedOnOnlyOneSubreddit done!">
+      <created>1481826451907</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1481826451907</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TodoView">
@@ -5188,7 +5201,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26438355" sideWeight="0.50646204" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2589041" sideWeight="0.49353796" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35342467" sideWeight="0.49353796" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32876712" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30547947" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -5270,7 +5283,9 @@
     <MESSAGE value="no longer creates duplicates when importing subreddits" />
     <MESSAGE value="printMaxAndMinScores works, but includes [deleted] users" />
     <MESSAGE value="printMaxAndMinScores query done!" />
-    <option name="LAST_COMMIT_MESSAGE" value="printMaxAndMinScores query done!" />
+    <MESSAGE value="Query 6. printMaxAndMinSubredditScores done!" />
+    <MESSAGE value="Query 8. printUsersWhoPostedOnOnlyOneSubreddit done!" />
+    <option name="LAST_COMMIT_MESSAGE" value="Query 8. printUsersWhoPostedOnOnlyOneSubreddit done!" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -5304,8 +5319,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#3840#3841#0" expanded="true" />
-            <element signature="e#3866#3867#0" expanded="true" />
+            <element signature="e#7076#7077#0" expanded="true" />
+            <element signature="e#7102#7103#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -5353,8 +5368,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#3840#3841#0" expanded="true" />
-            <element signature="e#3866#3867#0" expanded="true" />
+            <element signature="e#7076#7077#0" expanded="true" />
+            <element signature="e#7102#7103#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -5402,8 +5417,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#3840#3841#0" expanded="true" />
-            <element signature="e#3866#3867#0" expanded="true" />
+            <element signature="e#7076#7077#0" expanded="true" />
+            <element signature="e#7102#7103#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -5452,8 +5467,8 @@
           <caret line="67" column="43" selection-start-line="67" selection-start-column="43" selection-end-line="67" selection-end-column="43" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#3840#3841#0" expanded="true" />
-            <element signature="e#3866#3867#0" expanded="true" />
+            <element signature="e#7076#7077#0" expanded="true" />
+            <element signature="e#7102#7103#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -5509,8 +5524,8 @@
           <caret line="68" column="40" selection-start-line="68" selection-start-column="40" selection-end-line="68" selection-end-column="40" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#3840#3841#0" expanded="true" />
-            <element signature="e#3866#3867#0" expanded="true" />
+            <element signature="e#7076#7077#0" expanded="true" />
+            <element signature="e#7102#7103#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -5558,8 +5573,8 @@
           <caret line="68" column="40" selection-start-line="68" selection-start-column="40" selection-end-line="68" selection-end-column="40" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#3840#3841#0" expanded="true" />
-            <element signature="e#3866#3867#0" expanded="true" />
+            <element signature="e#7076#7077#0" expanded="true" />
+            <element signature="e#7102#7103#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -5600,8 +5615,8 @@
           <caret line="27" column="38" selection-start-line="27" selection-start-column="38" selection-end-line="27" selection-end-column="38" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#3840#3841#0" expanded="true" />
-            <element signature="e#3866#3867#0" expanded="true" />
+            <element signature="e#7076#7077#0" expanded="true" />
+            <element signature="e#7102#7103#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -5671,12 +5686,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="101" column="63" selection-start-line="101" selection-start-column="63" selection-end-line="101" selection-end-column="63" />
+        <state relative-caret-position="-2055">
+          <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#3840#3841#0" expanded="true" />
-            <element signature="e#3866#3867#0" expanded="true" />
+            <element signature="e#7076#7077#0" expanded="true" />
+            <element signature="e#7102#7103#0" expanded="true" />
           </folding>
         </state>
       </provider>
