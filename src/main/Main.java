@@ -33,8 +33,8 @@ public class Main {
 
     private static void printMaxAndMinScores() {
 //       ResultSet rs = db.getResultSet("SELECT (SELECT MAX(score) FROM Comment), (SELECT MIN(score) FROM Comment)");
-        ResultSet rs = db.getResultSet("SELECT author, MIN(sum_score) FROM( SELECT author, SUM(score) AS sum_score FROM Comment GROUP BY author)" +
-                "UNION SELECT author, MAX(sum_score) FROM( SELECT author, SUM(score) AS sum_score FROM Comment GROUP BY author)");
+        ResultSet rs = db.getResultSet("SELECT author, MIN(sum_score) FROM( SELECT author, SUM(score) AS sum_score FROM Comment WHERE author IS NOT '[deleted]' GROUP BY author)" +
+                "UNION SELECT author, MAX(sum_score) FROM( SELECT author, SUM(score) AS sum_score FROM Comment WHERE author IS NOT '[deleted]' GROUP BY author)");
 
         try {
             while(rs.next()) {
