@@ -37,21 +37,12 @@ public class Main {
     private static void printSubrettidsOfSpecificLinkID(String link_id) {
         ResultSet rs = db.getResultSet("SELECT author FROM Comment Where link_id = '" + link_id + "'");
 
+
         try {
+
             while(rs.next()) {
 
-                int i=1;
-                int j=1;
-                ResultSet subreddit_ids = db.getResultSet("SELECT subreddit_id FROM Comment Where author = '" + rs.getString(i) + "'");
-
-                while(subreddit_ids.next()) {
-                    System.out.println(subreddit_ids.getString(1));
-             //       j++;
-                }
-
-                System.out.println("\n\n");
-
-                i++;
+                System.out.println(rs.getString(1));
 
             }
         } catch (SQLException e) {
