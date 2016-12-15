@@ -20,13 +20,31 @@ public class Main {
 
     public static void main(String[] args) {
 
-     //   saveToDataBase(); // Comment this if database is already created and data is imported
+//        saveToDataBase(); // Comment this if database is already created and data is imported
 
     //    printNumCommentsSpecificUser("Captain-Obvious");
     //    printNumLolComments();
-    //    printNumCommentsSpecificSubredditPerDay("politics");
+//        printNumCommentsSpecificSubredditPerDay("politics");
+//        printSubrettidsOfSpecificLinkID("t3_5ykb7");
 
-        printSubrettidsOfSpecificLinkID("t3_5yll6");
+//        printMaxAndMinScores();
+
+         db.readFromDataBase("SELECT subreddit from Sub",1);
+
+    }
+
+    private static void printMaxAndMinScores() {
+//       ResultSet rs = db.getResultSet("SELECT (SELECT MAX(score) FROM Comment), (SELECT MIN(score) FROM Comment)");
+        ResultSet rs = db.getResultSet("SELECT author, MIN(sum_score) FROM( SELECT author, SUM(score) AS sum_score FROM Comment GROUP BY author), (SELECT author from Sub)");
+
+        try {
+            while(rs.next()) {
+                System.out.println(rs.getString(1) + "\tSum: " + rs.getString(2));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -35,16 +53,34 @@ public class Main {
      * @param link_id
      */
     private static void printSubrettidsOfSpecificLinkID(String link_id) {
-        ResultSet rs = db.getResultSet("SELECT author FROM Comment Where link_id = '" + link_id + "'");
 
+//       ResultSet rs = db.getResultSet("SELECT DISTINCT subreddit FROM Comment WHERE author IN (SELECT DISTINCT author FROM Comment WHERE link_id = '" + link_id + "')");
+//         ResultSet rs = db.getResultSet("SELECT subreddit from Sub (SELECT DISTINCT author FROM Comment where link_id = 't3_5zcbl'), (SELECT DISTINCT count(author) FROM Comment where link_id = 't3_5zcbl')");
+
+       ResultSet rs = db.getResultSet("SELECT * From (SELECT distinct subreddit FROM Comment WHERE author = (SELECT DISTINCT author FROM Comment  where link_id = 't3_5zcbl'))");
 
         try {
 
-            while(rs.next()) {
+            String users[] = new String[rs.getInt(2)];
+            int i=0;
 
+
+            while(rs.next()) {
                 System.out.println(rs.getString(1));
 
+                users[i] = rs.getString(1);
+                i++;
             }
+
+            for(int j=0; j<users.length; j++) {
+                ResultSet rs2 = db.getResultSet("SELECT DISTINCT subreddit FROM Comment where author = '" + users[j] +"'");
+
+                while(rs2.next()) {
+                    System.out.println(rs2.getString(1));
+                }
+                System.out.println("----------------------------------------------");
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -63,7 +99,7 @@ public class Main {
      */
     private static void printNumCommentsSpecificUser(String user) {
         db.readFromDataBase("SELECT count(body) FROM Comment Where  author = '" + user + "'",1);  // Here is where you select what to read
-        // Right now we get number of comments (count(body)), from author 'eggnogdog'.
+        // Right now we get number of comments (count(body)), from author 'user'.
     }
 
     private static void printNumCommentsSpecificSubredditPerDay(String subreddit) {
@@ -73,15 +109,8 @@ public class Main {
         int days = 0;
         double average = 0;
 
-        ResultSet rsSub = db.getResultSet("Select subreddit_id FROM Sub Where subreddit = '" + subreddit + "'");
-        String subreddit_id = null;
-        try {
-            subreddit_id = rsSub.getString(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-        ResultSet rs = db.getResultSet("SELECT created_utc FROM Comment Where subreddit_id = '" + subreddit_id + "'");
+        ResultSet rs = db.getResultSet("SELECT created_utc FROM Comment Where subreddit = '" + subreddit + "'");
 
         try {
             startTimer = rs.getInt(1);
@@ -108,11 +137,6 @@ public class Main {
     private static void printNumLolComments() {
         db.readFromDataBase("SELECT count(body) FROM Comment WHERE body LIKE '%lol%'",1);
     }
-
-
-
-
-
 
 
     /****
@@ -198,45 +222,6 @@ public class Main {
             e.printStackTrace();
         }
     }
-
-//    public static void executeBatch(int batchSize, int lineCount) {
-//        if(lineCount % batchSize == 0)
-//            try {
-//                System.out.println("excutetd Batch ");
-//                int [] resluts  =    preparedStatement.executeBatch();
-//                connection.commit();
-//
-//                System.out.println(resluts);
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//
-//
-//    }
-
-
-//    public static void readFromDataBase(String SQLstatment, String coloumName){
-//
-//        ResultSet resultSet;
-//        try {
-//            resultSet = statement.executeQuery(SQLstatment);
-//            while (resultSet.next()) {
-//                // read the result set
-//                System.out.println(resultSet.getString(coloumName));
-//
-//            }
-//
-//
-//
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//
-
-
 }
 
 

@@ -1,6 +1,5 @@
 package main;
 
-import java.io.File;
 import java.sql.*;
 
 
@@ -20,7 +19,6 @@ public class DatabaseHelper {
             connection.setAutoCommit(false);    // Manual commit
 
         } catch (SQLException e) {
-
             e.printStackTrace();
         }
     }
@@ -33,15 +31,16 @@ public class DatabaseHelper {
         try {
             // Create tables for sub, name and comment
             // SUB(sub_id, sub), NAME(id, name), COMMENT(rest + sub_id + id)
-            statement.execute("CREATE TABLE  IF NOT EXISTS Sub (subreddit_id TEXT, subreddit TEXT)");
+            statement.execute("CREATE TABLE Sub (subreddit TEXT, subreddit_id TEXT, UNIQUE(subreddit, subreddit_id))");
+
+
         //    statement.execute("CREATE TABLE IF NOT EXISTS Name(id TEXT, name TEXT)");
-            statement.execute("CREATE TABLE IF NOT EXISTS Comment (id TEXT, parent_id TEXT, link_id TEXT, name TEXT, author TEXT, body TEXT, subreddit_id TEXT, score INTEGER, created_utc TEXT)");
+            statement.execute("CREATE TABLE Comment (id TEXT, parent_id TEXT, link_id TEXT, name TEXT, author TEXT, body TEXT, subreddit TEXT, score INTEGER, created_utc TEXT)");
 
 
         } catch (SQLException e) {
             System.out.println("Failed while creating the table ");
             e.printStackTrace();
-
         }
     }
 
@@ -53,8 +52,9 @@ public class DatabaseHelper {
 
         // Creates are statements where '?' will be our values
 //        String sqlStatement1 = "INSERT INTO Name (id, name) VALUES (?,?)";
-        String sqlStatement2 = "INSERT INTO Sub (subreddit_id, subreddit) VALUES (?,?)";
-        String sqlStatement3 = "INSERT INTO Comment (id, parent_id, link_id, name, author, body, subreddit_id, score, created_utc) VALUES (?,?,?,?,?,?,?,?,?)";
+        String sqlStatement2 = "INSERT OR IGNORE INTO Sub (subreddit, subreddit_id) VALUES (?,?)";
+
+        String sqlStatement3 = "INSERT INTO Comment (id, parent_id, link_id, name, author, body, subreddit, score, created_utc) VALUES (?,?,?,?,?,?,?,?,?)";
 
 
         // Inserts values
@@ -64,8 +64,8 @@ public class DatabaseHelper {
 //            psNameTable.setString(2, name);
 
             psSubTable = connection.prepareStatement(sqlStatement2);
-            psSubTable.setString(1,subreddit_id);
-            psSubTable.setString(2,subreddit);
+            psSubTable.setString(1,subreddit);
+            psSubTable.setString(2,subreddit_id);
 
             psCommentTable = connection.prepareStatement(sqlStatement3);
             psCommentTable.setString(1, id);
@@ -74,7 +74,7 @@ public class DatabaseHelper {
             psCommentTable.setString(4, name);
             psCommentTable.setString(5, author);
             psCommentTable.setString(6, body);
-            psCommentTable.setString(7, subreddit_id);
+            psCommentTable.setString(7, subreddit);
             psCommentTable.setInt(8, score);
             psCommentTable.setString(9, created_utc);
 
