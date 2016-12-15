@@ -134,6 +134,16 @@ public class DatabaseHelper {
         }
     }
 
+    public ResultSet getResultSet(String SQLStatement) {
+        ResultSet rs = null;
+        try {
+            rs = statement.executeQuery(SQLStatement);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
 
     public void closeConnection() {
         if (connection != null) {

@@ -1,5 +1,6 @@
 package main;
 
+import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,7 +23,8 @@ public class Main {
      //   saveToDataBase(); // Comment this if database is already created and data is imported
 
     //    printNumCommentsSpecificUser("Captain-Obvious");
-        printNumLolComments();
+    //    printNumLolComments();
+        printNumCommentsSpecificSubredditPerDay("t5_6");
 
 
     }
@@ -43,7 +45,34 @@ public class Main {
         // Right now we get number of comments (count(body)), from author 'eggnogdog'.
     }
 
-    private static void printNumCommentsSpecificSubredditPerDay(String subreddit) {
+    private static void printNumCommentsSpecificSubredditPerDay(String subreddit_id) {
+        int starTimer = 0;
+        int postCounter = 0;
+        final int secondsPerDay = 86400;
+        int days = 0;
+        double average = 0;
+
+        ResultSet rs = db.getResultSet("SELECT created_utc FROM Comment Where subreddit_id = '" + subreddit_id + "'");
+
+        try {
+            starTimer = rs.getInt(1);
+            while (rs.next()) {
+
+                postCounter++;
+
+                if(rs.getInt(1) - starTimer >= secondsPerDay) {
+                    starTimer = rs.getInt(1);
+                    days++;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if(days != 0) {
+                average = postCounter/days;
+        }
+        System.out.println("Total posts: " + postCounter + ", Over " + days + " days.");
+        System.out.println(average + " is posted on average per day on this subreddit");
 
     }
 
