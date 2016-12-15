@@ -14,6 +14,10 @@ public class Main {
     private static  Connection connection;
     private static  PreparedStatement preparedStatement;
 
+    private static String file1 = "/Users/db/RC_2007_10";
+    private static String file2 = "/Users/db/RC_2011-07";
+    private static String file3 = "/Users/db/RC_2012-12";
+
     private static DatabaseHelper db = new DatabaseHelper();
 
 
@@ -22,17 +26,21 @@ public class Main {
 
 //        saveToDataBase(); // Comment this if database is already created and data is imported
 
-    //    printNumCommentsSpecificUser("Captain-Obvious");
-    //    printNumLolComments();
+//        printNumCommentsSpecificUser("Captain-Obvious");
+//        printNumLolComments();
 //        printNumCommentsSpecificSubredditPerDay("politics");
 //        printSubrettidsOfSpecificLinkID("t3_5ykb7");
+//        printMaxAndMinUserScores();
 
-        printMaxAndMinScores();
+        printMaxAndMinSubredditScores();
 
     }
 
-    private static void printMaxAndMinScores() {
-//       ResultSet rs = db.getResultSet("SELECT (SELECT MAX(score) FROM Comment), (SELECT MIN(score) FROM Comment)");
+    /**
+     * 5. Which users have the highest and lowest combined scores? (combined as the sum of all scores)
+     */
+    private static void printMaxAndMinUserScores() {
+
         ResultSet rs = db.getResultSet("SELECT author, MIN(sum_score) FROM( SELECT author, SUM(score) AS sum_score FROM Comment WHERE author IS NOT '[deleted]' GROUP BY author)" +
                 "UNION SELECT author, MAX(sum_score) FROM( SELECT author, SUM(score) AS sum_score FROM Comment WHERE author IS NOT '[deleted]' GROUP BY author)");
 
@@ -51,10 +59,7 @@ public class Main {
      */
     private static void printSubrettidsOfSpecificLinkID(String link_id) {
 
-//       ResultSet rs = db.getResultSet("SELECT DISTINCT subreddit FROM Comment WHERE author IN (SELECT DISTINCT author FROM Comment WHERE link_id = '" + link_id + "')");
-//         ResultSet rs = db.getResultSet("SELECT subreddit from Sub (SELECT DISTINCT author FROM Comment where link_id = 't3_5zcbl'), (SELECT DISTINCT count(author) FROM Comment where link_id = 't3_5zcbl')");
-
-       ResultSet rs = db.getResultSet("SELECT * From (SELECT distinct subreddit FROM Comment WHERE author = (SELECT DISTINCT author FROM Comment  where link_id = 't3_5zcbl'))");
+       ResultSet rs = db.getResultSet("SELECT * From (SELECT distinct subreddit FROM Comment WHERE author = (SELECT DISTINCT author FROM Comment  where link_id = '"+link_id+"'))");
 
         try {
 
@@ -83,6 +88,24 @@ public class Main {
         }
     }
 
+    /**
+     * 6. Which subreddits have the highest and lowest scored comments?
+     */
+    private static void printMaxAndMinSubredditScores() {
+
+        // reddit.com does not count as a subreddit
+        ResultSet rs = db.getResultSet("SELECT subreddit, MAX(max_score) FROM( SELECT subreddit, SUM(score) AS max_score FROM Comment WHERE subreddit IS NOT 'reddit.com' GROUP BY subreddit)" +
+                "UNION SELECT subreddit, MIN(min_score) FROM( SELECT subreddit, SUM(score) AS min_score FROM Comment WHERE subreddit IS NOT 'reddit.com' GROUP BY subreddit)");
+
+        try {
+            while(rs.next()) {
+                System.out.println(rs.getString(1) + "\tScore: " + rs.getString(2));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Method to import data to/create database
@@ -92,13 +115,16 @@ public class Main {
     }
 
     /**
-     * Method to read data form database
+     * 1. How many comments have a specific user posted?
      */
     private static void printNumCommentsSpecificUser(String user) {
-        db.readFromDataBase("SELECT count(body) FROM Comment Where  author = '" + user + "'",1);  // Here is where you select what to read
+        db.readFromDataBase("SELECT count(body) FROM Comment Where  author = '" + user + "'",1);
         // Right now we get number of comments (count(body)), from author 'user'.
     }
 
+    /**
+     * 2. How many comments does a specific subreddit get per day?
+     */
     private static void printNumCommentsSpecificSubredditPerDay(String subreddit) {
         int startTimer = 0;
         int postCounter = 0;
@@ -131,6 +157,9 @@ public class Main {
 
     }
 
+    /**
+     * 3. How many comments include the word ‘lol’?
+     */
     private static void printNumLolComments() {
         db.readFromDataBase("SELECT count(body) FROM Comment WHERE body LIKE '%lol%'",1);
     }
@@ -149,7 +178,7 @@ public class Main {
         try {
 
 
-            bufferedReader = new BufferedReader(new FileReader("/Users/db/RC_2007_10"));
+            bufferedReader = new BufferedReader(new FileReader(file1));
             start = System.currentTimeMillis(); // Start timer to later calculate time it takes.
             String line;
 
