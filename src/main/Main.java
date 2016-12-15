@@ -31,87 +31,10 @@ public class Main {
 //        printNumCommentsSpecificSubredditPerDay("politics");
 //        printSubrettidsOfSpecificLinkID("t3_5ykb7");
 //        printMaxAndMinUserScores();
+//        printMaxAndMinSubredditScores();
 
-        printMaxAndMinSubredditScores();
+        printUsersWhoPostedOnOnlyOneSubreddit();
 
-    }
-
-    /**
-     * 5. Which users have the highest and lowest combined scores? (combined as the sum of all scores)
-     */
-    private static void printMaxAndMinUserScores() {
-
-        ResultSet rs = db.getResultSet("SELECT author, MIN(sum_score) FROM( SELECT author, SUM(score) AS sum_score FROM Comment WHERE author IS NOT '[deleted]' GROUP BY author)" +
-                "UNION SELECT author, MAX(sum_score) FROM( SELECT author, SUM(score) AS sum_score FROM Comment WHERE author IS NOT '[deleted]' GROUP BY author)");
-
-        try {
-            while(rs.next()) {
-                System.out.println(rs.getString(1) + "\tSum: " + rs.getString(2));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 4. Users that commented on a specific link has also posted to which subreddits?
-     * @param link_id
-     */
-    private static void printSubrettidsOfSpecificLinkID(String link_id) {
-
-       ResultSet rs = db.getResultSet("SELECT * From (SELECT distinct subreddit FROM Comment WHERE author = (SELECT DISTINCT author FROM Comment  where link_id = '"+link_id+"'))");
-
-        try {
-
-            String users[] = new String[rs.getInt(2)];
-            int i=0;
-
-
-            while(rs.next()) {
-                System.out.println(rs.getString(1));
-
-                users[i] = rs.getString(1);
-                i++;
-            }
-
-            for(int j=0; j<users.length; j++) {
-                ResultSet rs2 = db.getResultSet("SELECT DISTINCT subreddit FROM Comment where author = '" + users[j] +"'");
-
-                while(rs2.next()) {
-                    System.out.println(rs2.getString(1));
-                }
-                System.out.println("----------------------------------------------");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 6. Which subreddits have the highest and lowest scored comments?
-     */
-    private static void printMaxAndMinSubredditScores() {
-
-        // reddit.com does not count as a subreddit
-        ResultSet rs = db.getResultSet("SELECT subreddit, MAX(max_score) FROM( SELECT subreddit, SUM(score) AS max_score FROM Comment WHERE subreddit IS NOT 'reddit.com' GROUP BY subreddit)" +
-                "UNION SELECT subreddit, MIN(min_score) FROM( SELECT subreddit, SUM(score) AS min_score FROM Comment WHERE subreddit IS NOT 'reddit.com' GROUP BY subreddit)");
-
-        try {
-            while(rs.next()) {
-                System.out.println(rs.getString(1) + "\tScore: " + rs.getString(2));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    /**
-     * Method to import data to/create database
-     */
-    private static void saveToDataBase() {
-        readFile();
     }
 
     /**
@@ -150,7 +73,7 @@ public class Main {
             e.printStackTrace();
         }
         if(days != 0) {
-                average = postCounter/days;
+            average = postCounter/days;
         }
         System.out.println("Total posts: " + postCounter + ", Over " + days + " days.");
         System.out.println(average + " is posted on average per day on this subreddit");
@@ -163,6 +86,101 @@ public class Main {
     private static void printNumLolComments() {
         db.readFromDataBase("SELECT count(body) FROM Comment WHERE body LIKE '%lol%'",1);
     }
+
+    /**
+     * 4. Users that commented on a specific link has also posted to which subreddits?
+     * @param link_id
+     */
+    private static void printSubrettidsOfSpecificLinkID(String link_id) {
+
+        ResultSet rs = db.getResultSet("SELECT * From (SELECT distinct subreddit FROM Comment WHERE author = (SELECT DISTINCT author FROM Comment  where link_id = '"+link_id+"'))");
+
+        try {
+
+            String users[] = new String[rs.getInt(2)];
+            int i=0;
+
+
+            while(rs.next()) {
+                System.out.println(rs.getString(1));
+
+                users[i] = rs.getString(1);
+                i++;
+            }
+
+            for(int j=0; j<users.length; j++) {
+                ResultSet rs2 = db.getResultSet("SELECT DISTINCT subreddit FROM Comment where author = '" + users[j] +"'");
+
+                while(rs2.next()) {
+                    System.out.println(rs2.getString(1));
+                }
+                System.out.println("----------------------------------------------");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 5. Which users have the highest and lowest combined scores? (combined as the sum of all scores)
+     */
+    private static void printMaxAndMinUserScores() {
+
+        ResultSet rs = db.getResultSet("SELECT author, MIN(sum_score) FROM( SELECT author, SUM(score) AS sum_score FROM Comment WHERE author IS NOT '[deleted]' GROUP BY author)" +
+                "UNION SELECT author, MAX(sum_score) FROM( SELECT author, SUM(score) AS sum_score FROM Comment WHERE author IS NOT '[deleted]' GROUP BY author)");
+
+        try {
+            while(rs.next()) {
+                System.out.println(rs.getString(1) + "\tSum: " + rs.getString(2));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 6. Which subreddits have the highest and lowest scored comments?
+     */
+    private static void printMaxAndMinSubredditScores() {
+
+        // reddit.com does not count as a subreddit
+        ResultSet rs = db.getResultSet("SELECT subreddit, MAX(max_score) FROM( SELECT subreddit, SUM(score) AS max_score FROM Comment WHERE subreddit IS NOT 'reddit.com' GROUP BY subreddit)" +
+                "UNION SELECT subreddit, MIN(min_score) FROM( SELECT subreddit, SUM(score) AS min_score FROM Comment WHERE subreddit IS NOT 'reddit.com' GROUP BY subreddit)");
+
+        try {
+            while(rs.next()) {
+                System.out.println(rs.getString(1) + "\tScore: " + rs.getString(2));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 8. Which users has only posted to a single subreddit?
+     */
+    private static void printUsersWhoPostedOnOnlyOneSubreddit() {
+        ResultSet rs = db.getResultSet("SELECT * FROM ( SELECT DISTINCT author, subreddit FROM Comment WHERE subreddit IS NOT 'reddit.com' GROUP BY subreddit HAVING count(subreddit) == 1)");
+
+        try {
+            while(rs.next()) {
+                System.out.println(rs.getString(1) + "\t Subreddit: " + rs.getString(2));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    /**
+     * Method to import data to/create database
+     */
+    private static void saveToDataBase() {
+        readFile();
+    }
+
 
 
     /****
