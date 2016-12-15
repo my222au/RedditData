@@ -24,9 +24,39 @@ public class Main {
 
     //    printNumCommentsSpecificUser("Captain-Obvious");
     //    printNumLolComments();
-        printNumCommentsSpecificSubredditPerDay("t5_6");
+    //    printNumCommentsSpecificSubredditPerDay("politics");
 
+        printSubrettidsOfSpecificLinkID("t3_5yll6");
 
+    }
+
+    /**
+     * 4. Users that commented on a specific link has also posted to which subreddits?
+     * @param link_id
+     */
+    private static void printSubrettidsOfSpecificLinkID(String link_id) {
+        ResultSet rs = db.getResultSet("SELECT author FROM Comment Where link_id = '" + link_id + "'");
+
+        try {
+            while(rs.next()) {
+
+                int i=1;
+                int j=1;
+                ResultSet subreddit_ids = db.getResultSet("SELECT subreddit_id FROM Comment Where author = '" + rs.getString(i) + "'");
+
+                while(subreddit_ids.next()) {
+                    System.out.println(subreddit_ids.getString(1));
+             //       j++;
+                }
+
+                System.out.println("\n\n");
+
+                i++;
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -45,23 +75,31 @@ public class Main {
         // Right now we get number of comments (count(body)), from author 'eggnogdog'.
     }
 
-    private static void printNumCommentsSpecificSubredditPerDay(String subreddit_id) {
-        int starTimer = 0;
+    private static void printNumCommentsSpecificSubredditPerDay(String subreddit) {
+        int startTimer = 0;
         int postCounter = 0;
         final int secondsPerDay = 86400;
         int days = 0;
         double average = 0;
 
+        ResultSet rsSub = db.getResultSet("Select subreddit_id FROM Sub Where subreddit = '" + subreddit + "'");
+        String subreddit_id = null;
+        try {
+            subreddit_id = rsSub.getString(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         ResultSet rs = db.getResultSet("SELECT created_utc FROM Comment Where subreddit_id = '" + subreddit_id + "'");
 
         try {
-            starTimer = rs.getInt(1);
+            startTimer = rs.getInt(1);
             while (rs.next()) {
 
                 postCounter++;
 
-                if(rs.getInt(1) - starTimer >= secondsPerDay) {
-                    starTimer = rs.getInt(1);
+                if(rs.getInt(1) - startTimer >= secondsPerDay) {
+                    startTimer = rs.getInt(1);
                     days++;
                 }
             }
