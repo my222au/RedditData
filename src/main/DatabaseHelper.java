@@ -171,6 +171,23 @@ public class DatabaseHelper {
             }
         }
     }
+
+    public void createIndex(String indexName, String table, String tuple1, String tuple2) {
+
+        try {
+            statement.execute("CREATE INDEX "+indexName+" ON "+table+" ("+tuple1+", "+tuple2+")");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void dropIndex(String indexName) {
+        try {
+            statement.execute("DROP INDEX "+indexName+"");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 

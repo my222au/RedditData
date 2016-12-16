@@ -14,14 +14,14 @@ public class Main {
 
     public static void main(String[] args) {
 
-        db.saveToDataBase(file1); // Comment this if database is already created and data is imported
+//        db.saveToDataBase(file1); // Comment this if database is already created and data is imported
 
 //        printNumCommentsSpecificUser("Captain-Obvious");      // 1
 //        printNumLolComments();                                // 2
 //        printNumCommentsSpecificSubredditPerDay("politics");  // 3
 //        printSubrettidsOfSpecificLinkID("t3_5ykb7");  // 4
-//        printMaxAndMinUserScores();               // 5
-//        printMaxAndMinSubredditScores();          // 6
+//        printMaxAndMinUserScores();               // 5  WITH INDEX: 145ms, WITHOUT: 619ms
+//        printMaxAndMinSubredditScores();          // 6  WITH INDEX: 141ms, WITHOUT: 623ms
 //        printUsersWhoInteractedWith("ejcross");   // 7
 //        printUsersWhoPostedOnOnlyOneSubreddit();  // 8
 
@@ -99,6 +99,8 @@ public class Main {
      */
     private static void printMaxAndMinUserScores() {
 
+        db.createIndex("authorScore", "Comment", "author", "score");
+
         ResultSet rs = db.getResultSet("SELECT author, MIN(sum_score) FROM( SELECT author, SUM(score) AS sum_score FROM Comment WHERE author IS NOT '[deleted]' GROUP BY author)" +
                 "UNION SELECT author, MAX(sum_score) FROM( SELECT author, SUM(score) AS sum_score FROM Comment WHERE author IS NOT '[deleted]' GROUP BY author)");
 
@@ -109,12 +111,16 @@ public class Main {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        db.dropIndex("authorScore");
     }
 
     /**
      * 6. Which subreddits have the highest and lowest scored comments?
      */
     private static void printMaxAndMinSubredditScores() {
+
+        db.createIndex("subredditScores", "Comment", "subreddit", "score");
 
         // reddit.com does not count as a subreddit
         ResultSet rs = db.getResultSet("SELECT subreddit, MAX(max_score) FROM( SELECT subreddit, SUM(score) AS max_score FROM Comment GROUP BY subreddit)" +
@@ -127,6 +133,8 @@ public class Main {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        db.dropIndex("subredditScores");
     }
 
     /**
