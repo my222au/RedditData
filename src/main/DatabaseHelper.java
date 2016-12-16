@@ -38,14 +38,15 @@ public class DatabaseHelper {
 
         try {
             // WITHOUT CONSTRAINTS
-//            statement.execute("CREATE TABLE Sub (subreddit TEXT, subreddit_id TEXT, UNIQUE(subreddit, subreddit_id))");
-//            statement.execute("CREATE TABLE Comment (id TEXT, parent_id TEXT, link_id TEXT, name TEXT, " +
-//                      "author TEXT, body TEXT, subreddit TEXT, score INTEGER, created_utc TEXT)");
+            statement.execute("CREATE TABLE Sub (subreddit TEXT, subreddit_id TEXT, UNIQUE(subreddit, subreddit_id))");
+            statement.execute("CREATE TABLE Comment (id TEXT, parent_id TEXT, link_id TEXT, name TEXT, " +
+                      "author TEXT, body TEXT, subreddit TEXT, score INTEGER, created_utc TEXT)");
 
             // WITH CONSTRAINTS
-            statement.execute("CREATE TABLE Sub (subreddit TEXT PRIMARY KEY, subreddit_id TEXT UNIQUE, UNIQUE(subreddit, subreddit_id))");
-            statement.execute("CREATE TABLE Comment (id TEXT PRIMARY KEY, parent_id TEXT, link_id TEXT, name TEXT CHECK(name LIKE 't1_%'), " +
-                    "author TEXT NOT NULL, body TEXT NOT NULL, subreddit TEXT NOT NULL, score INTEGER NOT NULL, created_utc TEXT NOT NULL, FOREIGN KEY(subreddit) REFERENCES Sub(subreddit) )");
+//            statement.execute("CREATE TABLE Sub (subreddit TEXT PRIMARY KEY, subreddit_id TEXT UNIQUE, UNIQUE(subreddit, subreddit_id))");
+//            statement.execute("CREATE TABLE Comment (id TEXT PRIMARY KEY, parent_id TEXT, link_id TEXT, name TEXT CHECK(name LIKE 't1_%'), " +
+//                    "author TEXT NOT NULL, body TEXT NOT NULL, subreddit TEXT NOT NULL, score INTEGER NOT NULL, created_utc TEXT NOT NULL, FOREIGN KEY(subreddit) REFERENCES Sub(subreddit) )");
+
 
         } catch (SQLException e) {
             System.out.println("Failed while creating the table ");
@@ -54,7 +55,11 @@ public class DatabaseHelper {
     }
 
 
-    // test to save the  read
+    /**
+     * Reads from database accotding to given Statement and prints given selection.
+     * @param SQLstatement SQL Statement to select something from the Database
+     * @param num What selection to print
+     */
     public void printFromDataBase(String SQLstatement, int num) {
 
         start = System.currentTimeMillis(); // Start timer to later calculate time it takes.
@@ -74,6 +79,11 @@ public class DatabaseHelper {
         System.out.println("\n\nTime: " + (System.currentTimeMillis() - start) + "ms\n\n"); // Ends timer
     }
 
+    /**
+     * Method to get a resultset given SQL Statement
+     * @param SQLStatement SQL Statement to select something from the Database
+     * @return Resultset of given statement
+     */
     public ResultSet getResultSet(String SQLStatement) {
 
         start = System.currentTimeMillis(); // Start timer to later calculate time it takes.
@@ -85,7 +95,7 @@ public class DatabaseHelper {
             e.printStackTrace();
         }
 
-        System.out.println("\n\nTime: " + (System.currentTimeMillis() - start) + "ms\n\n"); // Ends timer
+        System.out.println("\n\nTime: " + (System.currentTimeMillis() - start) + "ms\n\n"); // Ends and prints timer.
 
         return rs;
     }
@@ -102,7 +112,10 @@ public class DatabaseHelper {
         }
     }
 
-
+    /**
+     * Method that imports data from a path to the database.
+     * @param path String to a file to read data from.
+     */
     public void saveToDataBase(String path) {
 
         BufferedReader bufferedReader = null;
@@ -126,6 +139,7 @@ public class DatabaseHelper {
 
                         jsonObject = new JSONObject(line);   // Creates JSON Object
 
+                        // Insert the data
                         psSubTable.setString(1, jsonObject.getString("subreddit"));
                         psSubTable.setString(2, jsonObject.getString("subreddit_id"));
 
@@ -172,6 +186,13 @@ public class DatabaseHelper {
         }
     }
 
+    /**
+     * Method that creates an Index
+     * @param indexName String name of Index
+     * @param table String name of table to create index from
+     * @param tuple1 String of first tuple
+     * @param tuple2 String of second tuple
+     */
     public void createIndex(String indexName, String table, String tuple1, String tuple2) {
 
         try {
@@ -181,6 +202,10 @@ public class DatabaseHelper {
         }
     }
 
+    /**
+     * Method to drop given Index
+     * @param indexName Index to drop
+     */
     public void dropIndex(String indexName) {
         try {
             statement.execute("DROP INDEX "+indexName+"");

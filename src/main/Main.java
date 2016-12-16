@@ -4,6 +4,7 @@ import java.sql.*;
 
 public class Main {
 
+    // The paths to our 3 files.
     private static String file1 = "/Users/db/RC_2007_10";
     private static String file2 = "/Users/db/RC_2011-07";
     private static String file3 = "/Users/db/RC_2012-12";
@@ -14,16 +15,20 @@ public class Main {
 
     public static void main(String[] args) {
 
-//        db.saveToDataBase(file1); // Comment this if database is already created and data is imported
 
-//        printNumCommentsSpecificUser("Captain-Obvious");      // 1
+//          db.saveToDataBase(file1); // Comment this if database is already created and data is imported
+
+        /*
+        The query methods! uncomment the query you want to use!
+         */
+        printNumCommentsSpecificUser("Captain-Obvious");      // 1
 //        printNumLolComments();                                // 2
 //        printNumCommentsSpecificSubredditPerDay("politics");  // 3
-//        printSubrettidsOfSpecificLinkID("t3_5ykb7");  // 4
-//        printMaxAndMinUserScores();               // 5  WITH INDEX: 145ms, WITHOUT: 619ms
-//        printMaxAndMinSubredditScores();          // 6  WITH INDEX: 141ms, WITHOUT: 623ms
-//        printUsersWhoInteractedWith("ejcross");   // 7
-//        printUsersWhoPostedOnOnlyOneSubreddit();  // 8
+//        printSubrettidsOfSpecificLinkID("t3_5ykb7");          // 4
+//        printMaxAndMinUserScores();                           // 5
+//        printMaxAndMinSubredditScores();                      // 6
+//        printUsersWhoInteractedWith("ejcross");               // 7
+//        printUsersWhoPostedOnOnlyOneSubreddit();              // 8
 
     }
 
@@ -32,7 +37,6 @@ public class Main {
      */
     private static void printNumCommentsSpecificUser(String user) {
         db.printFromDataBase("SELECT count(body) FROM Comment Where  author = '" + user + "'",1);
-        // Right now we get number of comments (count(body)), from author 'user'.
     }
 
     /**
@@ -45,7 +49,6 @@ public class Main {
         int days = 0;
         double average = 0;
 
-
         ResultSet rs = db.getResultSet("SELECT created_utc FROM Comment Where subreddit = '" + subreddit + "'");
 
         try {
@@ -54,6 +57,7 @@ public class Main {
 
                 postCounter++;
 
+                // If the difference between the startTimer and the current time is EQUAL TO or LARGER THAN a day, a day has passed.
                 if(rs.getInt(1) - startTimer >= secondsPerDay) {
                     startTimer = rs.getInt(1);
                     days++;
@@ -62,9 +66,12 @@ public class Main {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        // Calculate the average number of posts.
         if(days != 0) {
             average = postCounter/days;
         }
+
         System.out.println("Total posts: " + postCounter + ", Over " + days + " days.");
         System.out.println(average + " is posted on average per day on this subreddit");
 
@@ -120,6 +127,7 @@ public class Main {
      */
     private static void printMaxAndMinSubredditScores() {
 
+        // Create an index between subreddit and score.
         db.createIndex("subredditScores", "Comment", "subreddit", "score");
 
         // reddit.com does not count as a subreddit
@@ -134,6 +142,7 @@ public class Main {
             e.printStackTrace();
         }
 
+        // Drop previously created index.
         db.dropIndex("subredditScores");
     }
 
