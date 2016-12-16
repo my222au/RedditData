@@ -17,6 +17,8 @@ public class DatabaseHelper {
     private PreparedStatement psSubTable;
     private PreparedStatement psCommentTable;
 
+    private long start;
+
 
     public DatabaseHelper() {
         try {
@@ -35,12 +37,13 @@ public class DatabaseHelper {
     public void createTables() {
 
         try {
-            // Create tables for sub, name and comment
-            // SUB(sub_id, sub), NAME(id, name), COMMENT(rest + sub_id + id)
-            statement.execute("CREATE TABLE Sub (subreddit TEXT, subreddit_id TEXT, UNIQUE(subreddit, subreddit_id))");
+            // Create tables for sub, name and comment WITHOUT CONSTRAINTS
+//            statement.execute("CREATE TABLE Sub (subreddit TEXT, subreddit_id TEXT, UNIQUE(subreddit, subreddit_id))");
+//            statement.execute("CREATE TABLE Comment (id TEXT, parent_id TEXT, link_id TEXT, name TEXT, author TEXT, body TEXT, subreddit TEXT, score INTEGER, created_utc TEXT)");
 
-            //    statement.execute("CREATE TABLE IF NOT EXISTS Name(id TEXT, name TEXT)");
-            statement.execute("CREATE TABLE Comment (id TEXT, parent_id TEXT, link_id TEXT, name TEXT, author TEXT, body TEXT, subreddit TEXT, score INTEGER, created_utc TEXT)");
+            // WITH CONSTRAINTS
+            statement.execute("CREATE TABLE Sub (subreddit TEXT PRIMARY KEY, subreddit_id TEXT UNIQUE, UNIQUE(subreddit, subreddit_id))");
+            statement.execute("CREATE TABLE Comment (id TEXT PRIMARY KEY, parent_id TEXT, link_id TEXT, name TEXT CHECK(name LIKE 't1_%'), author TEXT NOT NULL, body TEXT NOT NULL, subreddit TEXT NOT NULL, score INTEGER NOT NULL, created_utc TEXT NOT NULL)");
 
         } catch (SQLException e) {
             System.out.println("Failed while creating the table ");
@@ -51,6 +54,8 @@ public class DatabaseHelper {
 
     // test to save the  read
     public void printFromDataBase(String SQLstatement, int num) {
+
+        start = System.currentTimeMillis(); // Start timer to later calculate time it takes.
 
         ResultSet rs = null;
         try {
@@ -63,15 +68,23 @@ public class DatabaseHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        System.out.println("\n\nTime: " + (System.currentTimeMillis() - start) + "ms\n\n"); // Ends timer
     }
 
     public ResultSet getResultSet(String SQLStatement) {
+
+        start = System.currentTimeMillis(); // Start timer to later calculate time it takes.
+
         ResultSet rs = null;
         try {
             rs = statement.executeQuery(SQLStatement);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        System.out.println("\n\nTime: " + (System.currentTimeMillis() - start) + "ms\n\n"); // Ends timer
+
         return rs;
     }
 
@@ -103,11 +116,11 @@ public class DatabaseHelper {
             String line;
             JSONObject jsonObject;
 
-            // Creates are statements where '?' will be our values
+            // Creates are statements where '?' will be our values WITHOUT Constraints
             psSubTable = connection.prepareStatement("INSERT OR IGNORE INTO Sub (subreddit, subreddit_id) VALUES (?,?)");
             psCommentTable = connection.prepareStatement("INSERT INTO Comment (id, parent_id, link_id, name, author, body, subreddit, score, created_utc) VALUES (?,?,?,?,?,?,?,?,?)");
 
-                while ((line = bufferedReader.readLine()) != null) {
+            while ((line = bufferedReader.readLine()) != null) {
 
                         jsonObject = new JSONObject(line);   // Creates JSON Object
 
