@@ -13,10 +13,9 @@ import java.sql.*;
 public class DatabaseHelper {
     private Connection connection;
     private Statement statement;
- //   private PreparedStatement psNameTable;
+    //   private PreparedStatement psNameTable;
     private PreparedStatement psSubTable;
     private PreparedStatement psCommentTable;
-
 
 
     public DatabaseHelper() {
@@ -40,7 +39,7 @@ public class DatabaseHelper {
             // SUB(sub_id, sub), NAME(id, name), COMMENT(rest + sub_id + id)
             statement.execute("CREATE TABLE Sub (subreddit TEXT, subreddit_id TEXT, UNIQUE(subreddit, subreddit_id))");
 
-        //    statement.execute("CREATE TABLE IF NOT EXISTS Name(id TEXT, name TEXT)");
+            //    statement.execute("CREATE TABLE IF NOT EXISTS Name(id TEXT, name TEXT)");
             statement.execute("CREATE TABLE Comment (id TEXT, parent_id TEXT, link_id TEXT, name TEXT, author TEXT, body TEXT, subreddit TEXT, score INTEGER, created_utc TEXT)");
 
         } catch (SQLException e) {
@@ -50,56 +49,8 @@ public class DatabaseHelper {
     }
 
 
-    public void insert(String id, String parent_id, String link_id,
-                       String name, String author, String body,
-                       String subreddit_id, String subreddit, int score, String created_utc) {
-
-
-        // Creates are statements where '?' will be our values
-        String sqlStatement2 = "INSERT OR IGNORE INTO Sub (subreddit, subreddit_id) VALUES (?,?)";
-        String sqlStatement3 = "INSERT INTO Comment (id, parent_id, link_id, name, author, body, subreddit, score, created_utc) VALUES (?,?,?,?,?,?,?,?,?)";
-
-
-        // Inserts values
-        try {
-
-            psSubTable = connection.prepareStatement(sqlStatement2);
-            psSubTable.setString(1,subreddit);
-            psSubTable.setString(2,subreddit_id);
-
-            psCommentTable = connection.prepareStatement(sqlStatement3);
-            psCommentTable.setString(1, id);
-            psCommentTable.setString(2, parent_id);
-            psCommentTable.setString(3, link_id);
-            psCommentTable.setString(4, name);
-            psCommentTable.setString(5, author);
-            psCommentTable.setString(6, body);
-            psCommentTable.setString(7, subreddit);
-            psCommentTable.setInt(8, score);
-            psCommentTable.setString(9, created_utc);
-
-            psSubTable.addBatch();
-            psCommentTable.addBatch();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public void execute() {
-        try {
-            psCommentTable.executeBatch();
-            psSubTable.executeBatch();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     // test to save the  read
-    public void readFromDataBase(String SQLstatement,int num){
+    public void printFromDataBase(String SQLstatement, int num) {
 
         ResultSet rs = null;
         try {
@@ -157,57 +108,55 @@ public class DatabaseHelper {
             bufferedReader = new BufferedReader(new FileReader(path));
             start = System.currentTimeMillis(); // Start timer to later calculate time it takes.
             String line;
+            JSONObject jsonObject;
 
-            while ((line = bufferedReader.readLine())!= null) {
-                try {
-                    JSONObject jsonObject = new JSONObject(line);   // Creates JSON Object
+            // Creates are statements where '?' will be our values
+            String sqlStatement1 = "INSERT OR IGNORE INTO Sub (subreddit, subreddit_id) VALUES (?,?)";
+            String sqlStatement2 = "INSERT INTO Comment (id, parent_id, link_id, name, author, body, subreddit, score, created_utc) VALUES (?,?,?,?,?,?,?,?,?)";
 
-                    // Calls method with all tuple-key-names
-                    try {
-                        insert(jsonObject.getString("id"),
-                                jsonObject.getString("parent_id"),
-                                jsonObject.getString("link_id"),
-                                jsonObject.getString("name"),
-                                jsonObject.getString("author"),
-                                jsonObject.getString("body"),
-                                jsonObject.getString("subreddit_id"),
-                                jsonObject.getString("subreddit"),
-                                jsonObject.getInt("score"),
-                                jsonObject.getString("created_utc")
-                        );
+            psSubTable = connection.prepareStatement(sqlStatement1);
+            psCommentTable = connection.prepareStatement(sqlStatement2);
 
-                    } catch (JSONException e1) {
-                        e1.printStackTrace();
+                while ((line = bufferedReader.readLine()) != null) {
+
+                        jsonObject = new JSONObject(line);   // Creates JSON Object
+
+                        psSubTable.setString(1, jsonObject.getString("subreddit"));
+                        psSubTable.setString(2, jsonObject.getString("subreddit_id"));
+
+                        psCommentTable.setString(1, jsonObject.getString("id"));
+                        psCommentTable.setString(2, jsonObject.getString("parent_id"));
+                        psCommentTable.setString(3, jsonObject.getString("link_id"));
+                        psCommentTable.setString(4, jsonObject.getString("name"));
+                        psCommentTable.setString(5, jsonObject.getString("author"));
+                        psCommentTable.setString(6, jsonObject.getString("body"));
+                        psCommentTable.setString(7, jsonObject.getString("subreddit"));
+                        psCommentTable.setInt(8, jsonObject.getInt("score"));
+                        psCommentTable.setString(9, jsonObject.getString("created_utc"));
+
+                        psSubTable.addBatch();
+                        psCommentTable.addBatch();
+
+                    if (++lineCount % batchSize == 0) {    // Executes when lineCount reaches batchSize
+                        psCommentTable.executeBatch();
+                        psSubTable.executeBatch();
+                        connection.commit();
                     }
-
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
                 }
 
-                if(++lineCount % batchSize ==  0 ) {    // Executes when lineCount reaches batchSize
-                    psCommentTable.executeBatch();
-                    psSubTable.executeBatch();
-
-                }
-                psCommentTable.executeBatch();
-                psSubTable.executeBatch();
-
-            }
-            connectionCommit();
 
             end = (System.currentTimeMillis() - start); // Ends timer
             System.out.println(end);
 
             closeConnection();   // Closes connection
 
-        } catch (FileNotFoundException e) {
+        }  catch (SQLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-
-        } catch (SQLException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
-        } finally {
+        }  finally {
             if (bufferedReader != null) {
                 try {
                     bufferedReader.close();

@@ -4,10 +4,6 @@ import java.sql.*;
 
 public class Main {
 
-    private  static  Statement statement;
-    private static  Connection connection;
-    private static  PreparedStatement preparedStatement;
-
     private static String file1 = "/Users/db/RC_2007_10";
     private static String file2 = "/Users/db/RC_2011-07";
     private static String file3 = "/Users/db/RC_2012-12";
@@ -18,17 +14,16 @@ public class Main {
 
     public static void main(String[] args) {
 
-//        db.saveToDataBase(file1); // Comment this if database is already created and data is imported
+        db.saveToDataBase(file2); // Comment this if database is already created and data is imported
 
 //        printNumCommentsSpecificUser("Captain-Obvious");      // 1
 //        printNumLolComments();                                // 2
 //        printNumCommentsSpecificSubredditPerDay("politics");  // 3
-        printSubrettidsOfSpecificLinkID("t3_5ykb7");  // 4
+//        printSubrettidsOfSpecificLinkID("t3_5ykb7");  // 4
 //        printMaxAndMinUserScores();               // 5
 //        printMaxAndMinSubredditScores();          // 6
 //        printUsersWhoInteractedWith("ejcross");   // 7
 //        printUsersWhoPostedOnOnlyOneSubreddit();  // 8
-
 
     }
 
@@ -36,7 +31,7 @@ public class Main {
      * 1. How many comments have a specific user posted?
      */
     private static void printNumCommentsSpecificUser(String user) {
-        db.readFromDataBase("SELECT count(body) FROM Comment Where  author = '" + user + "'",1);
+        db.printFromDataBase("SELECT count(body) FROM Comment Where  author = '" + user + "'",1);
         // Right now we get number of comments (count(body)), from author 'user'.
     }
 
@@ -44,7 +39,7 @@ public class Main {
      * 2. How many comments does a specific subreddit get per day?
      */
     private static void printNumCommentsSpecificSubredditPerDay(String subreddit) {
-        int startTimer = 0;
+        int startTimer;
         int postCounter = 0;
         final int secondsPerDay = 86400;
         int days = 0;
@@ -79,12 +74,11 @@ public class Main {
      * 3. How many comments include the word ‘lol’?
      */
     private static void printNumLolComments() {
-        db.readFromDataBase("SELECT count(body) FROM Comment WHERE body LIKE '%lol%'",1);
+        db.printFromDataBase("SELECT count(body) FROM Comment WHERE body LIKE '%lol%'",1);
     }
 
     /**
      * 4. Users that commented on a specific link has also posted to which subreddits?
-     * @param link_id
      */
     private static void printSubrettidsOfSpecificLinkID(String link_id) {
 
