@@ -87,13 +87,6 @@ public class DatabaseHelper {
         }
     }
 
-    public void connectionCommit() {
-        try {
-            connection.commit();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void saveToDataBase(String path) {
 
@@ -111,11 +104,8 @@ public class DatabaseHelper {
             JSONObject jsonObject;
 
             // Creates are statements where '?' will be our values
-            String sqlStatement1 = "INSERT OR IGNORE INTO Sub (subreddit, subreddit_id) VALUES (?,?)";
-            String sqlStatement2 = "INSERT INTO Comment (id, parent_id, link_id, name, author, body, subreddit, score, created_utc) VALUES (?,?,?,?,?,?,?,?,?)";
-
-            psSubTable = connection.prepareStatement(sqlStatement1);
-            psCommentTable = connection.prepareStatement(sqlStatement2);
+            psSubTable = connection.prepareStatement("INSERT OR IGNORE INTO Sub (subreddit, subreddit_id) VALUES (?,?)");
+            psCommentTable = connection.prepareStatement("INSERT INTO Comment (id, parent_id, link_id, name, author, body, subreddit, score, created_utc) VALUES (?,?,?,?,?,?,?,?,?)");
 
                 while ((line = bufferedReader.readLine()) != null) {
 

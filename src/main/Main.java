@@ -14,14 +14,14 @@ public class Main {
 
     public static void main(String[] args) {
 
-        db.saveToDataBase(file2); // Comment this if database is already created and data is imported
+//        db.saveToDataBase(file3); // Comment this if database is already created and data is imported
 
-//        printNumCommentsSpecificUser("Captain-Obvious");      // 1
+//        printNumCommentsSpecificUser("rahhh");      // 1
 //        printNumLolComments();                                // 2
 //        printNumCommentsSpecificSubredditPerDay("politics");  // 3
 //        printSubrettidsOfSpecificLinkID("t3_5ykb7");  // 4
 //        printMaxAndMinUserScores();               // 5
-//        printMaxAndMinSubredditScores();          // 6
+        printMaxAndMinSubredditScores();          // 6
 //        printUsersWhoInteractedWith("ejcross");   // 7
 //        printUsersWhoPostedOnOnlyOneSubreddit();  // 8
 
