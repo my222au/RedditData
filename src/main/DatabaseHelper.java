@@ -37,13 +37,15 @@ public class DatabaseHelper {
     public void createTables() {
 
         try {
-            // Create tables for sub, name and comment WITHOUT CONSTRAINTS
+            // WITHOUT CONSTRAINTS
 //            statement.execute("CREATE TABLE Sub (subreddit TEXT, subreddit_id TEXT, UNIQUE(subreddit, subreddit_id))");
-//            statement.execute("CREATE TABLE Comment (id TEXT, parent_id TEXT, link_id TEXT, name TEXT, author TEXT, body TEXT, subreddit TEXT, score INTEGER, created_utc TEXT)");
+//            statement.execute("CREATE TABLE Comment (id TEXT, parent_id TEXT, link_id TEXT, name TEXT, " +
+//                      "author TEXT, body TEXT, subreddit TEXT, score INTEGER, created_utc TEXT)");
 
             // WITH CONSTRAINTS
             statement.execute("CREATE TABLE Sub (subreddit TEXT PRIMARY KEY, subreddit_id TEXT UNIQUE, UNIQUE(subreddit, subreddit_id))");
-            statement.execute("CREATE TABLE Comment (id TEXT PRIMARY KEY, parent_id TEXT, link_id TEXT, name TEXT CHECK(name LIKE 't1_%'), author TEXT NOT NULL, body TEXT NOT NULL, subreddit TEXT NOT NULL, score INTEGER NOT NULL, created_utc TEXT NOT NULL)");
+            statement.execute("CREATE TABLE Comment (id TEXT PRIMARY KEY, parent_id TEXT, link_id TEXT, name TEXT CHECK(name LIKE 't1_%'), " +
+                    "author TEXT NOT NULL, body TEXT NOT NULL, subreddit TEXT NOT NULL, score INTEGER NOT NULL, created_utc TEXT NOT NULL, FOREIGN KEY(subreddit) REFERENCES Sub(subreddit) )");
 
         } catch (SQLException e) {
             System.out.println("Failed while creating the table ");
