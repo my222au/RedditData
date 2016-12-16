@@ -27,14 +27,14 @@ public class Main {
 //        saveToDataBase(); // Comment this if database is already created and data is imported
 
 //        printNumCommentsSpecificUser("Captain-Obvious");
-        printNumLolComments();
+//        printNumLolComments();
 //        printNumCommentsSpecificSubredditPerDay("politics");
 //        printSubrettidsOfSpecificLinkID("t3_5ykb7");
 //        printMaxAndMinUserScores();
 //        printMaxAndMinSubredditScores();
 //        printUsersWhoPostedOnOnlyOneSubreddit();
 
-//        printUsersWhoInteractedWith("ejcross");
+        printUsersWhoInteractedWith("ejcross");
     }
 
     /**
@@ -162,16 +162,9 @@ public class Main {
      *    commented on a link that the specific user has commented on).
      */
     private static void printUsersWhoInteractedWith(String user) {
-        ResultSet rs = db.getResultSet("SELECT a_link FROM (SELECT link_id AS a_link FROM Comment WHERE author = '"+user+"')" +
-                "SELECT author FROM Comment");
 
-        rs = db.getResultSet("SELECT DISTINCT author FROM Comment WHERE author IS NOT '"+user+"' AND link_id IN" +
+       ResultSet rs = db.getResultSet("SELECT DISTINCT author FROM Comment WHERE author IS NOT '"+user+"' AND link_id IN" +
                 " (SELECT DISTINCT link_id FROM Comment WHERE author = '"+user+"' ORDER BY author)");
-
-
-
-        // "SELECT DISTINCT author FROM reddit WHERE not author=? and link_id IN
-        // (SELECT DISTINCT link_id FROM reddit WHERE author=?) ORDER BY author"
 
         try {
             while(rs.next()) {
